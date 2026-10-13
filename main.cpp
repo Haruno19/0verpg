@@ -66,10 +66,13 @@ struct Hero {
   Armor equippedArmor;
   Weapon equippedWeapon;
   std::vector<Armor> inventoryArmors;
+  std::vector<int> allPotions;
   int potions;
   int gold;
   int x, y;
 };
+
+size_t potionIdx = 0;
 
 // Equip armor from inventory
 void equipArmor(Hero &hero, int index);
@@ -109,6 +112,7 @@ int main(void) {
   hero.equippedArmor = {"None", 0};
   hero.equippedWeapon = {"Fists", 0, 0};
   hero.potions = 0;
+  hero.allPotions.push_back(20);
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
@@ -271,11 +275,14 @@ void lootRoom(Hero &hero, std::vector<Armor> &armors) {
 // Use potion
 void usePotion(Hero &hero) {
   if (hero.potions > 0) {
-    int heal = 20 + std::rand() % 21;
+    //int heal = 20 + std::rand() % 21;
+    int heal = hero.allPotions[potionIdx];
     hero.health += heal;
-    if (hero.health > 100) hero.health = 100;
+    if (hero.health > 100) { hero.health = 100; }
     hero.potions--;
-    std::cout << GREEN << "Potion used! +" << RESETCOLOUR << heal << " HP | Current HP: " << MAGENTA << hero.health << RESETCOLOUR << "\n";
+    hero.allPotions.erase(hero.allPotions.begin() + potionIdx);
+    if (potionIdx > 0) { potionIdx--; }
+    std::cout << GREEN << "Potion used!" << RESETCOLOUR << "  +" << heal << " HP | Current HP: " << MAGENTA << hero.health << RESETCOLOUR << "\n";
   } else {
     std::cout << RED << "No potions available!" << RESETCOLOUR << "\n";
   }
@@ -389,6 +396,8 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
   if (hero.gold >= selected.cost) {
     hero.gold -= selected.cost;
     hero.potions++;
+    hero.allPotions.push_back(selected.healAmount);
+    potionIdx++;
     std::cout << "Bought " << selected.name << ". You now have " << hero.potions << " potions.\n";
   } else { std::cout << "Not enough gold!\n"; }
 }
