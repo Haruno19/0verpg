@@ -248,6 +248,7 @@ bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
+    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << "CRITICAL HIT!\n"; }
     enemy.health -= heroAttack;
     std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " attacks for " << "\033[1;33m" << heroAttack << "\033[0;0m" <<" damage! " << enemy.name << " HP: " << "\033[1;31m" << std::max(0, enemy.health) << "\033[0;0m" << "\n";
     if (enemy.health <= 0) {
@@ -263,6 +264,7 @@ bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
     int totalDefense = hero.baseDefense + hero.equippedArmor.defense;
     int damage = enemy.attack - totalDefense;
     if (damage < 0) damage = 0;
+    if(std::rand() % 100 < 15) { std::cout << hero.name << " dodged!\n"; damage = 0; }
     hero.health -= damage;
     std::cout << enemy.name << " attacks for " << enemy.attack << " (Blocked: " << totalDefense << ") Damage taken: " << damage << " | " << hero.name << " HP: " << std::max(0, hero.health) << "\n";
     // Auto-use potion if low HP
