@@ -23,6 +23,13 @@
 #include <cctype>
 #include <random>
 
+#define RESETCOLOUR "\033[0;0m"
+#define YELLOW "\033[1;33m"
+#define GREEN "\033[1;32m"
+#define CYAN "\033[1;36m"
+#define RED "\033[1;31m"
+#define MAGENTA "\033[1;35m"
+
 // Armor structure
 struct Armor {
   std::string name;
@@ -221,16 +228,16 @@ bool battle(Hero &hero, Enemy enemy) {
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
-    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << "\033[1;33m" <<"CRITICAL HIT!" << "\033[0;0m" << "\n"; }
+    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW <<"CRITICAL HIT!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
-    std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " attacks for " << "\033[1;33m" << heroAttack << "\033[0;0m" <<" damage! " << enemy.name << " HP: " << "\033[1;31m" << std::max(0, enemy.health) << "\033[0;0m" << "\n";
+    std::cout << CYAN << hero.name << RESETCOLOUR << " attacks for " << YELLOW << heroAttack << RESETCOLOUR <<" damage! " << enemy.name << " HP: " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
     if (enemy.health <= 0) {
-      std::cout << "\033[1;35m" << enemy.name << "\033[0;0m" << "\033[1;32m" << " is defeated!" << "\033[0;0m" << "\n";
+      std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " is defeated!" << RESETCOLOUR << "\n";
       hero.gold += 30;
-      std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " earns 30 gold! Total gold: " << "\033[1;33m" << hero.gold << "\033[0;0m" << "\n";
+      std::cout << CYAN << hero.name << RESETCOLOUR << " earns 30 gold! Total gold: " << YELLOW << hero.gold << RESETCOLOUR << "\n";
       // Random loot drop
       int lootChance = std::rand() % 3;
-      if (lootChance == 0) { hero.potions++; std::cout << "\033[1;33m" << "Loot drop: Potion found! Total potions: " << "\033[0;0m"<< hero.potions << "\n"; }
+      if (lootChance == 0) { hero.potions++; std::cout << YELLOW << "Loot drop: Potion found! Total potions: " << RESETCOLOUR << hero.potions << "\n"; }
       return true;
     }
     // Enemy attacks
@@ -239,9 +246,9 @@ bool battle(Hero &hero, Enemy enemy) {
     if (damage < 0) damage = 0;
     if(std::rand() % 100 < 15) { std::cout << hero.name << " dodged!\n"; damage = 0; }
     hero.health -= damage;
-    std::cout << "\033[1;31m" << enemy.name << "\033[0;0m" << " attacks for " << "\033[1;31m" << enemy.attack << "\033[0;0m" << " (Blocked: " << "\033[1;35m" << totalDefense << "\033[0;0m" << ") Damage taken: " << "\033[1;33m" << damage << "\033[0;0m" << " | " << "\033[1;36m" << hero.name << "\033[0;0m" << " HP: " << "\033[1;32m" << std::max(0, hero.health) << "\033[0;0m" << "\n";
+    std::cout << RED << enemy.name << RESETCOLOUR << " attacks for " << RED << enemy.attack << RESETCOLOUR << " (Blocked: " << MAGENTA << totalDefense << RESETCOLOUR << ") Damage taken: " << YELLOW << damage << RESETCOLOUR << " | " << YELLOW << hero.name << RESETCOLOUR << " HP: " << GREEN << std::max(0, hero.health) << RESETCOLOUR << "\n";
     // Auto-use potion if low HP
-    if (hero.health <= 30 && hero.potions > 0) { std::cout << "⚠ Low HP! Auto-using potion...\n"; usePotion(hero); }
+    if (hero.health <= 30 && hero.potions > 0) { std::cout << CYAN << "⚠ Low HP! Auto-using potion..." << RESETCOLOUR << "\n"; usePotion(hero); }
     if (hero.health <= 0) { std::cout << hero.name << " has fallen...\n"; return false; }
   }
   return false;
