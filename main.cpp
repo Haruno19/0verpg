@@ -64,18 +64,16 @@ struct Hero {
   int x, y;
 };
 
-Potion defaultPotion = {"Small Potion", 20, 15};
-
 // Equip armor from inventory
 void equipArmor(Hero &hero, int index);
 // Equip weapon
 void equipWeapon(Hero &hero, const Weapon &weapon);
 // Battle simulation
-bool battle(Hero &hero, Enemy enemy, const Potion &potion);
+bool battle(Hero &hero, Enemy enemy);
 // Loot room
 void lootRoom(Hero &hero, std::vector<Armor> &armors);
 // Use potion
-void usePotion(Hero &hero, const Potion &potion);
+void usePotion(Hero &hero);
 // Trap room
 bool trapRoom(Hero &hero);
 // Treasure chest room
@@ -164,7 +162,7 @@ int main(void) {
       std::cin >> move;
       move = std::toupper(static_cast<unsigned char>(move));
       if (move == 'Q') { std::cout << "🏁 Game ended.\n"; return EXIT_SUCCESS; }
-      if (move == 'P') { usePotion(hero, defaultPotion); continue; }
+      if (move == 'P') { usePotion(hero); continue; }
       if (move == 'I') {
         std::cout << "\nInventory:\n";
         for (size_t i = 0; i < hero.inventoryArmors.size(); ++i) {
@@ -218,32 +216,7 @@ void equipArmor(Hero &hero, int index) {
 }
 
 // Battle simulation
-/*bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
-  std::cout << "\n⚔ Battle starts! " << hero.name << " vs " << enemy.name << "\n";
-  while (enemy.health > 0 && hero.health > 0) {
-    int totalDefense = hero.baseDefense + hero.equippedArmor.defense;
-    int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
-    int damageToHero = enemy.attack - totalDefense;
-    if (damageToHero < 0) damageToHero = 0;
-    hero.health -= damageToHero;
-    std::cout << enemy.name << " attacks! Damage: " << damageToHero << " | Hero HP: " << hero.health << "\n";
-    //int heroAttack = 10 + std::rand() % 11; // Hero attack 10-20
-    enemy.health -= heroAttack;
-    std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " strikes! Damage: " << "\033[1;33m" << heroAttack << "\033[0;0m" << " | Enemy HP: " << "\033[1;31m" << enemy.health << "\033[0;0m" << "\n";
-  }
-  // Auto-use potion if low HP
-  if (hero.health <= 30 && hero.potions > 0) { std::cout << "⚠ Low HP! Auto-using potion...\n"; usePotion(hero, potion); }
-  if (hero.health <= 0) { std::cout << "\033[1;31m" << hero.name << " has fallen..." << "\033[0;0m" << "\n"; return false; }
-  std::cout << hero.name << " defeated " << enemy.name << "!\n";
-  hero.gold += 30;
-  std::cout << hero.name << " earns 30 gold! Total gold: " << "\033[1;33m" << hero.gold << "\033[0;0m" << "\n";
-  // Random loot drop
-  int lootChance = std::rand() % 3;
-  if (lootChance == 0) { hero.potions++; std::cout << "Loot drop: Potion found! Total potions: " << hero.potions << "\n"; }
-  return true;
-}*/
-
-bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
+bool battle(Hero &hero, Enemy enemy) {
   std::cout << "\n⚔ Battle: " << hero.name << " vs " << enemy.name << "\n";
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
@@ -268,7 +241,7 @@ bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
     hero.health -= damage;
     std::cout << "\033[1;31m" << enemy.name << "\033[0;0m" << " attacks for " << "\033[1;31m" << enemy.attack << "\033[0;0m" << " (Blocked: " << "\033[1;35m" << totalDefense << "\033[0;0m" << ") Damage taken: " << "\033[1;33m" << damage << "\033[0;0m" << " | " << "\033[1;36m" << hero.name << "\033[0;0m" << " HP: " << "\033[1;32m" << std::max(0, hero.health) << "\033[0;0m" << "\n";
     // Auto-use potion if low HP
-    if (hero.health <= 30 && hero.potions > 0) { std::cout << "⚠ Low HP! Auto-using potion...\n"; usePotion(hero, potion); }
+    if (hero.health <= 30 && hero.potions > 0) { std::cout << "⚠ Low HP! Auto-using potion...\n"; usePotion(hero); }
     if (hero.health <= 0) { std::cout << hero.name << " has fallen...\n"; return false; }
   }
   return false;
@@ -288,7 +261,7 @@ void lootRoom(Hero &hero, std::vector<Armor> &armors) {
 }
 
 // Use potion
-void usePotion(Hero &hero, const Potion &potion) {
+void usePotion(Hero &hero) {
   if (hero.potions > 0) {
     int heal = 20 + std::rand() % 21;
     hero.health += heal;
@@ -327,7 +300,7 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armor> &ar
   if (cell == 'E') {
     Enemy enemy = enemies[std::rand() % enemies.size()];
     cell = '.';
-    return battle(hero, enemy, defaultPotion);
+    return battle(hero, enemy);
   } else if (cell == 'L') {
     lootRoom(hero, armors);
     cell = '.';
@@ -335,7 +308,7 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armor> &ar
   } else if (cell == 'B') {
     Enemy boss = {"Dungeon Boss", 25, 80};
     cell = '.';
-    return battle(hero, boss, defaultPotion);
+    return battle(hero, boss);
   } else if (cell == 'T') {
     cell = '.';
     return trapRoom(hero);
