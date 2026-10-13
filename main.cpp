@@ -248,11 +248,11 @@ bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
-    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << "CRITICAL HIT!\n"; }
+    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << "\033[1;33m" <<"CRITICAL HIT!" << "\033[0;0m" << "\n"; }
     enemy.health -= heroAttack;
     std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " attacks for " << "\033[1;33m" << heroAttack << "\033[0;0m" <<" damage! " << enemy.name << " HP: " << "\033[1;31m" << std::max(0, enemy.health) << "\033[0;0m" << "\n";
     if (enemy.health <= 0) {
-      std::cout << enemy.name << " is defeated!\n";
+      std::cout << "\033[1;35m" << enemy.name << "\033[0;0m" << "\033[1;32m" << " is defeated!" << "\033[0;0m" << "\n";
       hero.gold += 30;
       std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " earns 30 gold! Total gold: " << "\033[1;33m" << hero.gold << "\033[0;0m" << "\n";
       // Random loot drop
@@ -266,7 +266,7 @@ bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
     if (damage < 0) damage = 0;
     if(std::rand() % 100 < 15) { std::cout << hero.name << " dodged!\n"; damage = 0; }
     hero.health -= damage;
-    std::cout << enemy.name << " attacks for " << enemy.attack << " (Blocked: " << totalDefense << ") Damage taken: " << damage << " | " << hero.name << " HP: " << std::max(0, hero.health) << "\n";
+    std::cout << "\033[1;31m" << enemy.name << "\033[0;0m" << " attacks for " << "\033[1;31m" << enemy.attack << "\033[0;0m" << " (Blocked: " << "\033[1;35m" << totalDefense << "\033[0;0m" << ") Damage taken: " << "\033[1;33m" << damage << "\033[0;0m" << " | " << "\033[1;36m" << hero.name << "\033[0;0m" << " HP: " << "\033[1;32m" << std::max(0, hero.health) << "\033[0;0m" << "\n";
     // Auto-use potion if low HP
     if (hero.health <= 30 && hero.potions > 0) { std::cout << "⚠ Low HP! Auto-using potion...\n"; usePotion(hero, potion); }
     if (hero.health <= 0) { std::cout << hero.name << " has fallen...\n"; return false; }
