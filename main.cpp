@@ -249,14 +249,14 @@ bool battle(Hero &hero, Enemy enemy, const Potion &potion) {
     // Hero attacks
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
     enemy.health -= heroAttack;
-    std::cout << hero.name << " attacks for " << heroAttack << " damage! " << enemy.name << " HP: " << std::max(0, enemy.health) << "\n";
+    std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " attacks for " << "\033[1;33m" << heroAttack << "\033[0;0m" <<" damage! " << enemy.name << " HP: " << "\033[1;31m" << std::max(0, enemy.health) << "\033[0;0m" << "\n";
     if (enemy.health <= 0) {
       std::cout << enemy.name << " is defeated!\n";
       hero.gold += 30;
-      std::cout << hero.name << " earns 30 gold! Total gold: " << hero.gold << "\n";
+      std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " earns 30 gold! Total gold: " << "\033[1;33m" << hero.gold << "\033[0;0m" << "\n";
       // Random loot drop
       int lootChance = std::rand() % 3;
-      if (lootChance == 0) { hero.potions++; std::cout << "Loot drop: Potion found! Total potions: " << hero.potions << "\n"; }
+      if (lootChance == 0) { hero.potions++; std::cout << "\033[1;33m" << "Loot drop: Potion found! Total potions: " << "\033[0;0m"<< hero.potions << "\n"; }
       return true;
     }
     // Enemy attacks
