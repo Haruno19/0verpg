@@ -181,7 +181,7 @@ bool battle(Hero &hero, Enemy enemy) {
     if (damageToHero < 0) damageToHero = 0;
     hero.health -= damageToHero;
     std::cout << enemy.name << " attacks! Damage: " << damageToHero << " | Hero HP: " << hero.health << "\n";
-    int heroAttack = 10 + rand() % 11; // Hero attack 10-20
+    int heroAttack = 10 + std::rand() % 11; // Hero attack 10-20
     enemy.health -= heroAttack;
     std::cout << "\033[1;36m" << hero.name << "\033[0;0m" << " strikes! Damage: " << "\033[1;33m" << heroAttack << "\033[0;0m" << " | Enemy HP: " << "\033[1;31m" << enemy.health << "\033[0;0m" << "\n";
   }
@@ -192,7 +192,7 @@ bool battle(Hero &hero, Enemy enemy) {
 
 // Loot room
 void lootRoom(Hero &hero, std::vector<Armor> &armors) {
-  int lootType = rand() % 2;
+  int lootType = std::rand() % 2;
   if (lootType == 0) {
     hero.potions++;
     std::cout << "🧪 Found a health potion! Potions: " << hero.potions << "\n";
@@ -206,7 +206,7 @@ void lootRoom(Hero &hero, std::vector<Armor> &armors) {
 // Use potion
 void usePotion(Hero &hero) {
   if (hero.potions > 0) {
-    int heal = 20 + rand() % 21;
+    int heal = 20 + std::rand() % 21;
     hero.health += heal;
     if (hero.health > 100) hero.health = 100;
     hero.potions--;
@@ -218,7 +218,7 @@ void usePotion(Hero &hero) {
 
 // Trap room
 bool trapRoom(Hero &hero) {
-  int damage = 5 + rand() % 16; // 5-20 damage
+  int damage = 5 + std::rand() % 16; // 5-20 damage
   hero.health -= damage;
   std::cout << "💥 Trap triggered! You take " << damage << " damage. HP: " << hero.health << "\n";
   return hero.health > 0;
@@ -284,7 +284,7 @@ void shop(Hero &hero, std::vector<Armor> &armors) {
   } else if (choice == 2) {
     if (hero.gold >= 50) {
       hero.gold -= 50;
-      Armor newArmor = armors[rand() % armors.size()];
+      Armor newArmor = armors[std::rand() % armors.size()];
       hero.inventoryArmors.push_back(newArmor);
       std::cout << "Bought armor: " << newArmor.name << " (Defense +" << newArmor.defense << ")\n";
     } else { std::cout << "Not enough gold!\n"; }
