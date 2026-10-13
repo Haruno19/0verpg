@@ -1,4 +1,4 @@
-# The gmae is entirely vibe coded from the Edge browser
+# The game is entirely vibe coded from the Edge browser (the chat button to the right)
 
 ![](1snap.png)
 
