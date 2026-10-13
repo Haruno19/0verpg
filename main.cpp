@@ -406,9 +406,9 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
   if (choice == 0) return;
   Potion selected = potionsList[choice-1];
   if (hero.gold >= selected.cost) {
-  hero.gold -= selected.cost;
-  hero.potions++;
-  std::cout << "Bought " << selected.name << ". You now have " << hero.potions << " potions.\n";
+    hero.gold -= selected.cost;
+    hero.potions++;
+    std::cout << "Bought " << selected.name << ". You now have " << hero.potions << " potions.\n";
   } else { std::cout << "Not enough gold!\n"; }
 }
 
