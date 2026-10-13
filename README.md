@@ -1,9 +1,9 @@
-# The game is entirely vibe coded from the Edge browser (the chat button to the right)
+# The game is entirely vibe coded from the Edge browser (the chat button to the right)  [![C/C++ CI](https://github.com/su8/0verpg/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/su8/0verpg/actions/workflows/c-cpp.yml)
 
 ![](1snap.png)
 
 # 0verpg
-Small Dungeon Based Game
+Small Dungeon Based Game that is cross-platform availabel
 
 # Compile
 
