@@ -151,7 +151,7 @@ int main(void) {
   int mapSize = 5;     // Map size (square grid)
 
   for (int floor = 1; floor <= floors; ++floor) {
-    std::cout << "\n🏰 Floor " << floor << " begins!\n";
+    std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     // Generate map and visited tracker
     std::vector<std::vector<char>> dungeon = generateMap(mapSize);
     std::vector<std::vector<bool>> visited(mapSize, std::vector<bool>(mapSize, false));
@@ -163,8 +163,8 @@ int main(void) {
     potionShop(hero, potionsList);
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
-      std::cout << "\n💎 Gold: " << hero.gold << " | ❤️ HP: " << hero.health << " | 🧪 Potions: " << hero.potions << "\n";
-      std::cout << "Move (W/A/S/D), P to use potion, I to change armor, Q to quit: ";
+      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR <<  "\n";
+      std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armor, Q to quit: " << RESETCOLOUR;
       char move;
       std::cin >> move;
       move = std::toupper(static_cast<unsigned char>(move));
@@ -229,7 +229,7 @@ bool battle(Hero &hero, Enemy enemy) {
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
-    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW <<"CRITICAL HIT!" << RESETCOLOUR << "\n"; }
+    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << "CRITICAL HIT!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
     std::cout << CYAN << hero.name << RESETCOLOUR << " attacks for " << YELLOW << heroAttack << RESETCOLOUR <<" damage! " << enemy.name << " HP: " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
     if (enemy.health <= 0) {
@@ -250,7 +250,7 @@ bool battle(Hero &hero, Enemy enemy) {
     std::cout << RED << enemy.name << RESETCOLOUR << " attacks for " << RED << enemy.attack << RESETCOLOUR << " (Blocked: " << MAGENTA << totalDefense << RESETCOLOUR << ") Damage taken: " << YELLOW << damage << RESETCOLOUR << " | " << YELLOW << hero.name << RESETCOLOUR << " HP: " << GREEN << std::max(0, hero.health) << RESETCOLOUR << "\n";
     // Auto-use potion if low HP
     if (hero.health <= 30 && hero.potions > 0) { std::cout << CYAN << "⚠ Low HP! Auto-using potion..." << RESETCOLOUR << "\n"; usePotion(hero); }
-    if (hero.health <= 0) { std::cout << hero.name << " has fallen...\n"; return false; }
+    if (hero.health <= 0) { std::cout << RED << hero.name << " has fallen..." << RESETCOLOUR << "\n"; return false; }
   }
   return false;
 }
@@ -420,7 +420,7 @@ std::vector<std::vector<char>> generateMap(int size) {
 
 // Display map with fog of war
 void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std::vector<bool>> &visited, const Hero &hero) {
-  std::cout << "\nDungeon Map:\n";
+  std::cout << "\n" << GREEN << "Dungeon Map:" << RESETCOLOUR << "\n";
   for (int i = 0; i < map.size(); ++i) {
     for (int j = 0; j < map[i].size(); ++j) {
       if (i == hero.x && j == hero.y) std::cout << GREEN << 'H' << RESETCOLOUR << ' ';

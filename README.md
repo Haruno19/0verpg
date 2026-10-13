@@ -3,7 +3,7 @@
 ![](1snap.png)
 
 # 0verpg
-Small Dungeon Based Game that is cross-platform availabel
+Small Dungeon Based Game that is cross-platform available.
 
 # Compile
 
@@ -11,6 +11,7 @@ Small Dungeon Based Game that is cross-platform availabel
 make -j8 # to use 8 cores/threads in parallel compile
 sudo make install
 ```
+
 Now to run the game type `0verpg`.
 
 ---
