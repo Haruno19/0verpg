@@ -22,12 +22,6 @@ PROG=main.cpp
 all:
 	$(CXX) -o $(PACKAGE) $(PROG) $(CFLAGS) $(LDFLAGS)
 
-XCB:
-	$(CXX) -o $(PACKAGE) mainXCB.cpp $(CFLAGS) $(LDFLAGS) -lxcb -lxcb-keysyms -lX11
-
-BSD:
-	$(CXX) -o $(PACKAGE) mainBSD.cpp $(CFLAGS) $(LDFLAGS)
-
 install: 
 	install -D -s -m 755 $(PACKAGE) /usr/bin/$(PACKAGE)
 
@@ -37,4 +31,4 @@ clean:
 uninstall:
 	rm -f /usr/bin/$(PACKAGE)
 
-.PHONY: XCB BSD all install clean uninstall
+.PHONY: all install clean uninstall
