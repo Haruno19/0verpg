@@ -287,7 +287,7 @@ void usePotion(Hero &hero) {
   if (hero.potions > 0) {
     //int heal = 20 + std::rand() % 21;
     int heal = 0;
-    if (potionIdx >= 0U) { heal = hero.allPotions[potionIdx]; potionIdx--; }
+    if (potionIdx >= 0U) { heal = (hero.allPotions[potionIdx] > 60 ? 60 : hero.allPotions[potionIdx]); potionIdx--; }
     hero.health += heal;
     if (hero.health > 100) { hero.health = 100; }
     hero.potions--;
