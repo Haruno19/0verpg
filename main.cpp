@@ -23,6 +23,11 @@
 #include <cctype>
 #include <random>
 
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+#endif /* _WIN32 */
+
 #define RESETCOLOUR "\033[0;0m"
 #define YELLOW "\033[1;33m"
 #define GREEN "\033[1;32m"
@@ -72,7 +77,8 @@ struct Hero {
   int x, y;
 };
 
-size_t potionIdx = 0;
+// Used to index the last potion and pop it back from the "hero.allPotions" vector, which stores all the different potion types
+size_t potionIdx = 0U;
 
 // Equip armor from inventory
 void equipArmor(Hero &hero, int index);
@@ -102,6 +108,9 @@ std::vector<std::vector<char>> generateMap(int size);
 void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std::vector<bool>> &visited, const Hero &hero);
 
 int main(void) {
+#ifdef _WIN32
+  SetConsoleTitle("0verpg");
+#endif /*_WIN32 */
   std::srand(static_cast<unsigned>(std::time(nullptr)));
   Hero hero;
   std::cout << "Enter hero name: ";
@@ -132,7 +141,8 @@ int main(void) {
   // Potions
   std::vector<Potion> potionsList = {
     {"Small Potion", 20, 15},
-    {"Large Potion", 40, 30}
+    {"Large Potion", 40, 30},
+    {"Huge Potion", 60, 45}
   };
   std::cout << "\nChoose starting armor:\n";
   for (size_t i = 0; i < armors.size(); ++i) {
@@ -276,12 +286,12 @@ void lootRoom(Hero &hero, std::vector<Armor> &armors) {
 void usePotion(Hero &hero) {
   if (hero.potions > 0) {
     //int heal = 20 + std::rand() % 21;
-    int heal = hero.allPotions[potionIdx];
+    int heal = 0;
+    if (potionIdx >= 0U) { heal = hero.allPotions[potionIdx]; potionIdx--; }
     hero.health += heal;
     if (hero.health > 100) { hero.health = 100; }
     hero.potions--;
-    hero.allPotions.erase(hero.allPotions.begin() + potionIdx);
-    if (potionIdx > 0) { potionIdx--; }
+    hero.allPotions.pop_back();
     std::cout << GREEN << "Potion used!" << RESETCOLOUR << "  +" << heal << " HP | Current HP: " << MAGENTA << hero.health << RESETCOLOUR << "\n";
   } else {
     std::cout << RED << "No potions available!" << RESETCOLOUR << "\n";
@@ -386,7 +396,7 @@ void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
 // Potion shop
 void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
   std::cout << "\n🍵 Potion Shop — You have " << hero.gold << " gold.\n";
-  for (size_t i = 0; i < potionsList.size(); ++i) { std::cout << i+1 << ". " << potionsList[i].name << " (Heal +" << potionsList[i].healAmount << ", Cost: " << potionsList[i].cost << " gold)\n"; }
+  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << i+1 << ". " << potionsList[i].name << " (Heal +" << potionsList[i].healAmount << ", Cost: " << potionsList[i].cost << " gold)\n"; }
   std::cout << "0. Skip\n";
   int choice;
   std::cout << "Choose potion: ";
@@ -396,7 +406,7 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
   if (hero.gold >= selected.cost) {
     hero.gold -= selected.cost;
     hero.potions++;
-    hero.allPotions.push_back(selected.healAmount);
+    hero.allPotions.emplace_back(selected.healAmount);
     potionIdx++;
     std::cout << "Bought " << selected.name << ". You now have " << hero.potions << " potions.\n";
   } else { std::cout << "Not enough gold!\n"; }
