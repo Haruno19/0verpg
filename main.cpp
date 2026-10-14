@@ -145,7 +145,12 @@ int main(void) {
     {"Large Potion", 40, 30},
     {"Huge Potion", 60, 45}
   };
-  //for (const auto &key : potionsList) { lastPotionIdxFromList = key.healAmount; }
+  // per level enemies
+  std::vector<Enemy> enemies = {
+    {"Goblin", 8, 30},
+    {"Orc", 12, 40},
+    {"Skeleton", 15, 50}
+  };
   lastPotionIdxFromList = potionsList[potionsList.size() - 1].healAmount;
   std::cout << "\nChoose starting armor:\n";
   for (size_t i = 0; i < armors.size(); ++i) {
@@ -157,16 +162,8 @@ int main(void) {
     hero.equippedArmor = armors[choice-1];
     hero.inventoryArmors.emplace_back(armors[choice-1]);
   }
-
-  std::vector<Enemy> enemies = {
-    {"Goblin", 8, 30},
-    {"Orc", 12, 40},
-    {"Skeleton", 15, 50}
-  };
-
   int floors = 3;      // Number of dungeon floors
   int mapSize = 5;     // Map size (square grid)
-
   for (int floor = 1; floor <= floors; ++floor) {
     // Generate map and visited tracker
     std::vector<std::vector<char>> dungeon = generateMap(mapSize);
@@ -214,7 +211,7 @@ int main(void) {
       bool bossAlive = false;
       for (int i = 0; i < mapSize; ++i) {
         for (int j = 0; j < mapSize; ++j) {
-          if (dungeon[i][j] == 'B') bossAlive = true;
+          if (dungeon[i][j] == 'B' || dungeon[i][j] == 'G') bossAlive = true;
         }
       }
       if (!bossAlive) {
@@ -252,7 +249,7 @@ bool battle(Hero &hero, Enemy enemy) {
     if (enemy.health <= 0) {
       std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " is defeated!" << RESETCOLOUR << "\n";
       hero.gold += 30;
-      std::cout << CYAN << hero.name << RESETCOLOUR << " earns 30 gold! Total gold: " << YELLOW << hero.gold << RESETCOLOUR << "\n";
+      std::cout << CYAN << hero.name << RESETCOLOUR << " earns " << YELLOW << "30" << RESETCOLOUR << " gold! Total gold: " << YELLOW << hero.gold << RESETCOLOUR << "\n";
       // Random loot drop
       int lootChance = std::rand() % 3;
       if (lootChance == 0) { hero.potions++; std::cout << YELLOW << "Loot drop: Potion found! Total potions: " << RESETCOLOUR << hero.potions << "\n"; }
@@ -335,6 +332,10 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armor> &ar
     return true;
   } else if (cell == 'B') {
     Enemy boss = {"Dungeon Boss", 25, 80};
+    cell = '.';
+    return battle(hero, boss);
+  } else if (cell == 'G') {
+    Enemy boss = {"Arena Boss", 26, 85};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'T') {
@@ -433,10 +434,13 @@ std::vector<std::vector<char>> generateMap(int size) {
       else if (r == 3) map[i][j] = 'C'; // Chest
     }
   }
-   // Place boss in random location
+   // Place bosses in random location
   int bx = std::rand() % size;
   int by = std::rand() % size;
   map[bx][by] = 'B';
+  int bx2 = std::rand() % size;
+  int by2 = std::rand() % size;
+  map[bx2][by2] = 'G';
   return map;
 }
 
