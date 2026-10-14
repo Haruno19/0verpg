@@ -259,7 +259,7 @@ bool battle(Hero &hero, Enemy enemy) {
     int totalDefense = hero.baseDefense + hero.equippedArmor.defense;
     int damage = enemy.attack - totalDefense;
     if (damage < 0) damage = 0;
-    if(std::rand() % 100 < 15) { std::cout << hero.name << " dodged!\n"; damage = 0; }
+    if(std::rand() % 100 < 15) { std::cout << MAGENTA << hero.name << GREEN << " dodged!" << RESETCOLOUR << "\n"; damage = 0; }
     hero.health -= damage;
     std::cout << RED << enemy.name << RESETCOLOUR << " attacks for " << RED << enemy.attack << RESETCOLOUR << " (Blocked: " << MAGENTA << totalDefense << RESETCOLOUR << ") Damage taken: " << YELLOW << damage << RESETCOLOUR << " | " << YELLOW << hero.name << RESETCOLOUR << " HP: " << GREEN << std::max(0, hero.health) << RESETCOLOUR << "\n";
     // Auto-use potion if low HP
