@@ -431,7 +431,7 @@ std::vector<std::vector<char>> generateMap(int size) {
   std::vector<std::vector<char>> map(size, std::vector<char>(size, '.'));
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
-      int r = std::rand() % 8; // More variety
+      int r = std::rand() % 6; // More variety
       if (r == 0) map[i][j] = 'E'; // Enemy
       else if (r == 1) map[i][j] = 'L'; // Loot
       else if (r == 2) map[i][j] = 'T'; // Trap
