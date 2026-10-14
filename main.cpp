@@ -211,7 +211,7 @@ int main(void) {
       bool bossAlive = false;
       for (int i = 0; i < mapSize; ++i) {
         for (int j = 0; j < mapSize; ++j) {
-          if (dungeon[i][j] == 'B' || dungeon[i][j] == 'G') bossAlive = true;
+          if (dungeon[i][j] == 'B' || dungeon[i][j] == 'G' || dungeon[i][j] == 'Z') bossAlive = true;
         }
       }
       if (!bossAlive) {
@@ -338,6 +338,10 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armor> &ar
     Enemy boss = {"Arena Boss", 26, 85};
     cell = '.';
     return battle(hero, boss);
+  } else if (cell == 'Z') {
+    Enemy boss = {"Tarkan Boss", 27, 90};
+    cell = '.';
+    return battle(hero, boss);
   } else if (cell == 'T') {
     cell = '.';
     return trapRoom(hero);
@@ -427,20 +431,24 @@ std::vector<std::vector<char>> generateMap(int size) {
   std::vector<std::vector<char>> map(size, std::vector<char>(size, '.'));
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
-      int r = std::rand() % 6; // More variety
+      int r = std::rand() % 8; // More variety
       if (r == 0) map[i][j] = 'E'; // Enemy
       else if (r == 1) map[i][j] = 'L'; // Loot
       else if (r == 2) map[i][j] = 'T'; // Trap
       else if (r == 3) map[i][j] = 'C'; // Chest
     }
   }
-   // Place bosses in random location
+  // Place bosses in random locations
+  bool bossSpawned = false;
   int bx = std::rand() % size;
   int by = std::rand() % size;
   map[bx][by] = 'B';
   int bx2 = std::rand() % size;
   int by2 = std::rand() % size;
-  if (by != by2 && bx != bx2) { map[bx2][by2] = 'G'; }
+  int bx3 = std::rand() % size;
+  int by3 = std::rand() % size;
+  if (by != by2 && bx != bx2) { map[bx2][by2] = 'G'; bossSpawned = true; }
+  if (!bossSpawned && (by3 != by2 && bx3 != bx2)) { map[bx3][by3] = 'Z'; }
   return map;
 }
 
