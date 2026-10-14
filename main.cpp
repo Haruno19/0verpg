@@ -79,6 +79,7 @@ struct Hero {
 
 // Used to index the last potion and pop it back from the "hero.allPotions" vector, which stores all the different potion types
 size_t potionIdx = 0U;
+size_t lastPotionIdxFromList = 0U;
 
 // Equip armor from inventory
 void equipArmor(Hero &hero, int index);
@@ -144,6 +145,8 @@ int main(void) {
     {"Large Potion", 40, 30},
     {"Huge Potion", 60, 45}
   };
+  //for (const auto &key : potionsList) { lastPotionIdxFromList = key.healAmount; }
+  lastPotionIdxFromList = potionsList[potionsList.size() - 1].healAmount;
   std::cout << "\nChoose starting armor:\n";
   for (size_t i = 0; i < armors.size(); ++i) {
     std::cout << i+1 << ". " << armors[i].name << " (Defense +" << armors[i].defense << ")\n";
@@ -287,7 +290,7 @@ void usePotion(Hero &hero) {
   if (hero.potions > 0) {
     //int heal = 20 + std::rand() % 21;
     int heal = 0;
-    if (potionIdx >= 0U) { heal = (hero.allPotions[potionIdx] > 60 ? 60 : hero.allPotions[potionIdx]); potionIdx--; }
+    if (potionIdx >= 0U) { heal = (hero.allPotions[potionIdx] > lastPotionIdxFromList ? lastPotionIdxFromList : hero.allPotions[potionIdx]); if (potionIdx > 0) { potionIdx--; } }
     hero.health += heal;
     if (hero.health > 100) { hero.health = 100; }
     hero.potions--;
