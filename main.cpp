@@ -122,7 +122,7 @@ int main(void) {
   hero.equippedArmor = {"None", 0};
   hero.equippedWeapon = {"Fists", 0, 0};
   hero.potions = 0;
-  hero.allPotions.push_back(20);
+  hero.allPotions.emplace_back(20);
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
@@ -155,7 +155,7 @@ int main(void) {
   std::cin >> choice;
   if (choice >= 1 && choice <= (int)armors.size()) {
     hero.equippedArmor = armors[choice-1];
-    hero.inventoryArmors.push_back(armors[choice-1]);
+    hero.inventoryArmors.emplace_back(armors[choice-1]);
   }
 
   std::vector<Enemy> enemies = {
@@ -168,7 +168,6 @@ int main(void) {
   int mapSize = 5;     // Map size (square grid)
 
   for (int floor = 1; floor <= floors; ++floor) {
-    std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     // Generate map and visited tracker
     std::vector<std::vector<char>> dungeon = generateMap(mapSize);
     std::vector<std::vector<bool>> visited(mapSize, std::vector<bool>(mapSize, false));
@@ -178,6 +177,7 @@ int main(void) {
     bool floorCleared = false;
     weaponShop(hero, weapons);
     potionShop(hero, potionsList);
+    std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
       std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR <<  "\n";
@@ -280,7 +280,7 @@ void lootRoom(Hero &hero, std::vector<Armor> &armors) {
     std::cout << GREEN << "🧪 Found a health potion! Potions: " << hero.potions << RESETCOLOUR << "\n";
   } else {
     Armor newArmor = armors[std::rand() % armors.size()];
-    hero.inventoryArmors.push_back(newArmor);
+    hero.inventoryArmors.emplace_back(newArmor);
     std::cout << GREEN << "🛡 Found new armor: " << newArmor.name << " (Defense +" << newArmor.defense << RESETCOLOUR << ")\n";
   }
 }
@@ -318,7 +318,7 @@ void chestRoom(Hero &hero, std::vector<Armor> &armors) {
     std::cout << GREEN << "💰 Found a treasure chest with " << goldFound << " gold! Total gold: " << hero.gold << RESETCOLOUR << "\n";
   } else {
     Armor rareArmor = armors[std::rand() % armors.size()];
-    hero.inventoryArmors.push_back(rareArmor);
+    hero.inventoryArmors.emplace_back(rareArmor);
     std::cout << GREEN << "✨ Found rare armor: " << rareArmor.name << " (Defense +" << rareArmor.defense << RESETCOLOUR << ")\n";
   }
 }
@@ -370,7 +370,7 @@ void shop(Hero &hero, std::vector<Armor> &armors) {
     if (hero.gold >= 50) {
       hero.gold -= 50;
       Armor newArmor = armors[std::rand() % armors.size()];
-      hero.inventoryArmors.push_back(newArmor);
+      hero.inventoryArmors.emplace_back(newArmor);
       std::cout << "Bought armor: " << newArmor.name << " (Defense +" << newArmor.defense << ")\n";
     } else { std::cout << "Not enough gold!\n"; }
   } else { std::cout << "Leaving shop...\n"; }
