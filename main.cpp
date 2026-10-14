@@ -448,7 +448,7 @@ std::vector<std::vector<char>> generateMap(int size) {
   int bx3 = std::rand() % size;
   int by3 = std::rand() % size;
   if (by != by2 && bx != bx2) { map[bx2][by2] = 'G'; bossSpawned = true; }
-  if (!bossSpawned && (by3 != by2 && bx3 != bx2)) { map[bx3][by3] = 'Z'; }
+  if (!bossSpawned && (by3 != by && bx3 != bx)) { map[bx3][by3] = 'Z'; }
   return map;
 }
 
