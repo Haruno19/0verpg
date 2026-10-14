@@ -440,7 +440,7 @@ std::vector<std::vector<char>> generateMap(int size) {
   map[bx][by] = 'B';
   int bx2 = std::rand() % size;
   int by2 = std::rand() % size;
-  map[bx2][by2] = 'G';
+  if (by != by2 && bx != bx2) { map[bx2][by2] = 'G'; }
   return map;
 }
 
