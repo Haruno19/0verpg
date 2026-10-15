@@ -187,8 +187,8 @@ int main(void) {
       displayMap(dungeon, visited, hero);
       std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR
         << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | "
-        << "⚡" << CYAN << " Atk: " << hero.baseAttack + hero.equippedWeapon.attack << " Def: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
-        << " | " << "⏫ " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
+        << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
+        << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
       std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armour, O to change weapon, Q to quit: " << RESETCOLOUR;
       char move;
       std::cin >> move;
@@ -258,6 +258,7 @@ void equipArmour(Hero &hero, int index) {
   hero.equippedArmour = hero.inventoryArmours[index];
   std::cout << hero.name << " equipped " << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")\n";
 }
+
 // Equip weapon from inventory
 void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index) {
   if (index < 0 || index >= (int)weapons.size()) { std::cout << "Invalid weapon index.\n"; return; }
