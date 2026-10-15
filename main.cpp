@@ -184,7 +184,7 @@ int main(void) {
     std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
-      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | " << "⏫ " << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
+      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | " << "⏫ " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
       std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armor, Q to quit: " << RESETCOLOUR;
       char move;
       std::cin >> move;
