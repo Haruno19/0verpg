@@ -185,7 +185,8 @@ int main(void) {
     std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
-      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR
+      // Emojis from - www.emojishark.com
+      std::cout << YELLOW << "\n💰 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "💗 HP: " << hero.health << RESETCOLOUR
         << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | "
         << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
