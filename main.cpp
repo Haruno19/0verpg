@@ -185,12 +185,15 @@ int main(void) {
     std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
-      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | " << "⏫ " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
+      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR
+        << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | "
+        << "⚡" << CYAN << " Atk: " << hero.baseAttack + hero.equippedWeapon.attack << " Def: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
+        << " | " << "⏫ " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
       std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armour, O to change weapon, Q to quit: " << RESETCOLOUR;
       char move;
       std::cin >> move;
       move = std::toupper(static_cast<unsigned char>(move));
-      if (move == 'Q') { std::cout << "🏁 Game ended.\n"; return EXIT_SUCCESS; }
+      if (move == 'Q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       if (move == 'P') { usePotion(hero); continue; }
       if (move == 'I') {
         std::cout << "\nInventory Armours:\n";
