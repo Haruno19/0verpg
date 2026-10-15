@@ -60,6 +60,7 @@ struct Enemy {
   std::string name;
   int attack;
   int health;
+  int xpReward;
 };
 
 // Hero structure
@@ -75,6 +76,8 @@ struct Hero {
   int potions;
   int gold;
   int x, y;
+  int xp;
+  int level;
 };
 
 // Used to index the last potion and pop it back from the "hero.allPotions" vector, which stores all the different potion types
@@ -107,6 +110,8 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList);
 std::vector<std::vector<char>> generateMap(int size);
 // Display map with fog of war
 void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std::vector<bool>> &visited, const Hero &hero);
+// Gain XP and check for level up
+void gainXP(Hero &her, int amount);
 
 int main(void) {
 #ifdef _WIN32
@@ -126,6 +131,8 @@ int main(void) {
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
+  hero.level = 0;
+  hero.xp = 0;
   std::vector<Armor> armors = {
     {"Leather Armor", 5},
     {"Iron Armor", 10},
@@ -147,9 +154,9 @@ int main(void) {
   };
   // per level enemies
   std::vector<Enemy> enemies = {
-    {"Goblin", 8, 30},
-    {"Orc", 12, 40},
-    {"Skeleton", 15, 50}
+    {"Goblin", 8, 30, 20},
+    {"Orc", 12, 40, 30},
+    {"Skeleton", 15, 50, 40}
   };
   lastPotionIdxFromList = potionsList[potionsList.size() - 1].healAmount;
   std::cout << "\nChoose starting armor:\n";
@@ -177,7 +184,7 @@ int main(void) {
     std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
-      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR <<  "\n";
+      std::cout << YELLOW << "\n💎 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "❤️ HP: " << hero.health << RESETCOLOUR << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | " << "⏫ " << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
       std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armor, Q to quit: " << RESETCOLOUR;
       char move;
       std::cin >> move;
@@ -250,6 +257,7 @@ bool battle(Hero &hero, Enemy enemy) {
       std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " is defeated!" << RESETCOLOUR << "\n";
       hero.gold += 30;
       std::cout << CYAN << hero.name << RESETCOLOUR << " earns " << YELLOW << "30" << RESETCOLOUR << " gold! Total gold: " << YELLOW << hero.gold << RESETCOLOUR << "\n";
+      gainXP(hero, enemy.xpReward);
       // Random loot drop
       int lootChance = std::rand() % 3;
       if (lootChance == 0) { hero.potions++; std::cout << YELLOW << "Loot drop: Potion found! Total potions: " << RESETCOLOUR << hero.potions << "\n"; }
@@ -331,15 +339,15 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armor> &ar
     cell = '.';
     return true;
   } else if (cell == 'B') {
-    Enemy boss = {"Dungeon Boss", 25, 80};
+    Enemy boss = {"Dungeon Boss", 25, 80, 50};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'G') {
-    Enemy boss = {"Arena Boss", 26, 85};
+    Enemy boss = {"Arena Boss", 26, 85, 60};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'Z') {
-    Enemy boss = {"Tarkan Boss", 27, 90};
+    Enemy boss = {"Tarkan Boss", 27, 90, 70};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'T') {
@@ -462,5 +470,19 @@ void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std
       else std::cout << YELLOW << '?' << RESETCOLOUR << ' ';
     }
     std::cout << "\n";
+  }
+}
+
+// Gain XP and check for level up
+void gainXP(Hero &hero, int amount) {
+  hero.xp += amount;
+  std::cout << GREEN << hero.name << RESETCOLOUR << YELLOW << " gained " << RESETCOLOUR << CYAN << amount << " XP!" << RESETCOLOUR << "\n";
+  if (hero.xp >= hero.level * 50) { // Level up threshold
+    hero.level++;
+    hero.health += 20;
+    if (hero.health > 100) { hero.health = 100; }
+    hero.baseAttack += 5;
+    hero.xp = 0; // reset XP after level up
+    std::cout << GREEN << "*** LEVEL UP! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " is now level " << hero.level << RESETCOLOUR << "!\n";
   }
 }
