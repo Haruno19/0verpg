@@ -132,7 +132,7 @@ int main(void) {
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
-  hero.level = 0;
+  hero.level = 1;
   hero.xp = 0;
   std::vector<Armour> armours = {
     {"Leather Armour", 5},
@@ -189,7 +189,8 @@ int main(void) {
       std::cout << YELLOW << "\n💰 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "💗 HP: " << hero.health << RESETCOLOUR
         << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | "
         << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
-        << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << "\n";
+        << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << " | " 
+        << "🆙" << CYAN << " XP to next level: " << hero.xp << "/" << hero.level * 50 << RESETCOLOUR << "\n";
       std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armour, O to change weapon, Q to quit: " << RESETCOLOUR;
       char move;
       std::cin >> move;
