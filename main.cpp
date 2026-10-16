@@ -403,9 +403,9 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &a
 
 // Shop system
 void shop(Hero &hero, std::vector<Armour> &armours) {
-  std::cout << "\n🏪 Welcome to the shop! You have " << hero.gold << " gold.\n";
-  std::cout << "1. Buy Potion (20 gold)\n";
-  std::cout << "2. Buy Armour Upgrade (50 gold)\n";
+  std::cout << CYAN << "\n🏪 Welcome to the shop! You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "1." << RESETCOLOUR << BLUE << " Buy Potion " << RESETCOLOUR << YELLOW << "(20 gold)" << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "2." << RESETCOLOUR << BLUE << " Buy Armour Upgrade "<< RESETCOLOUR << YELLOW << "(50 gold)" << RESETCOLOUR << "\n";
   std::cout << "3. Exit Shop\n";
   int choice;
   std::cin >> choice;
@@ -413,18 +413,18 @@ void shop(Hero &hero, std::vector<Armour> &armours) {
     if (hero.gold >= 20) {
       hero.gold -= 20;
       hero.potions++;
-      std::cout << "Bought a potion! Potions: " << hero.potions << "\n";
+      std::cout << GREEN << "Bought a potion! Potions: " << hero.potions << RESETCOLOUR << "\n";
     } else {
-      std::cout << "Not enough gold!\n";
+      std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n";
     }
   } else if (choice == 2) {
     if (hero.gold >= 50) {
       hero.gold -= 50;
       Armour newArmour = armours[std::rand() % armours.size()];
       hero.inventoryArmours.emplace_back(newArmour);
-      std::cout << "Bought armour: " << newArmour.name << " (Defense +" << newArmour.defense << ")\n";
-    } else { std::cout << "Not enough gold!\n"; }
-  } else { std::cout << "Leaving shop...\n"; }
+      std::cout << BLUE << "Bought armour: " << newArmour.name << " (Defense +" << newArmour.defense << ")" << RESETCOLOUR << "\n";
+    } else { std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n"; }
+  } else { std::cout << YELLOW << "Leaving shop..." << RESETCOLOUR << "\n"; }
 }
 
 // Weapon shop system
