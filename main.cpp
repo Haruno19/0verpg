@@ -313,12 +313,12 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
   else if (lootType == 1) {
     Weapon newWeapon = weapons[std::rand() % weapons.size()];
     hero.inventoryWeapons.emplace_back(newWeapon);
-    std::cout << GREEN << "⚔ Found new weapon: " << newWeapon.name << " (Attack +" << newWeapon.attack << RESETCOLOUR << ")\n";
+    std::cout << GREEN << "⚔ Found new weapon: " << newWeapon.name << " (Attack +" << newWeapon.attack << ")" << RESETCOLOUR << "\n";
   }
   else {
     Armour newArmour = armours[std::rand() % armours.size()];
     hero.inventoryArmours.emplace_back(newArmour);
-    std::cout << GREEN << "🛡 Found new armour: " << newArmour.name << " (Defense +" << newArmour.defense << RESETCOLOUR << ")\n";
+    std::cout << GREEN << "🛡 Found new armour: " << newArmour.name << " (Defense +" << newArmour.defense << ")" << RESETCOLOUR << "\n";
   }
 }
 
@@ -424,7 +424,7 @@ void shop(Hero &hero, std::vector<Armour> &armours) {
 // Weapon shop system
 void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
   std::cout << "\n⚔ Weapon Shop — You have " << hero.gold << " gold.\n";
-  std::cout << "Currently equipped weapon: " << CYAN << hero.equippedWeapon.name << RESETCOLOUR << "\n";
+  std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << CYAN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
   for (size_t i = 0; i < weapons.size(); ++i) { std::cout << i+1 << ". " << weapons[i].name << " (Attack +" << weapons[i].attack  << ", Cost: " << weapons[i].cost << " gold)\n"; }
   std::cout << "0. Skip\n";
   int choice;
