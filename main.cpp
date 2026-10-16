@@ -162,11 +162,12 @@ int main(void) {
     {"Skeleton", 15, 50, 40}
   };
   // Inventory weapons/armours colours for their names
-  const char *coloursArr[] = { BLUE, MAGENTA, GREEN };
+  const char *coloursArr[] = { BLUE, MAGENTA, GREEN, RED, YELLOW, CYAN };
+  const int coloursArrLen = sizeof(coloursArr) / sizeof(coloursArr[0]);
   lastPotionIdxFromList = potionsList[potionsList.size() - 1].healAmount;
   std::cout << "\nChoose starting armour:\n";
   for (size_t i = 0; i < armours.size(); ++i) {
-    std::cout << i+1 << ". " << armours[i].name << " (Defense +" << armours[i].defense << ")\n";
+    std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << MAGENTA << armours[i].name << CYAN << " (Defense +" << armours[i].defense << ")" << RESETCOLOUR << "\n";
   }
   int choice;
   std::cin >> choice;
@@ -206,7 +207,7 @@ int main(void) {
         std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
-          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % 3] << hero.inventoryArmours[i].name << RESETCOLOUR << CYAN << " (Defense +" << hero.inventoryArmours[i].defense << ")" << RESETCOLOUR << "\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryArmours[i].name << RESETCOLOUR << CYAN << " (Defense +" << hero.inventoryArmours[i].defense << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose armour number: ";
         int idx;
@@ -218,7 +219,7 @@ int main(void) {
         std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
-          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % 3] << hero.inventoryWeapons[i].name << RESETCOLOUR << CYAN << " (Attack +" << hero.inventoryWeapons[i].attack << ")" << RESETCOLOUR << "\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryWeapons[i].name << RESETCOLOUR << CYAN << " (Attack +" << hero.inventoryWeapons[i].attack << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose weapon number: ";
         int idx;
@@ -428,15 +429,15 @@ void shop(Hero &hero, std::vector<Armour> &armours) {
 
 // Weapon shop system
 void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
-  std::cout << "\n⚔ Weapon Shop — You have " << hero.gold << " gold.\n";
+  std::cout << CYAN << "\n⚔ Weapon Shop — You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
   std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << CYAN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
-  for (size_t i = 0; i < weapons.size(); ++i) { std::cout << i+1 << ". " << weapons[i].name << " (Attack +" << weapons[i].attack  << ", Cost: " << weapons[i].cost << " gold)\n"; }
+  for (size_t i = 0; i < weapons.size(); ++i) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << weapons[i].name << " (Attack +" << weapons[i].attack  << "," << RESETCOLOUR << YELLOW << " Cost: " << weapons[i].cost << " gold)" << RESETCOLOUR << "\n"; }
   std::cout << "0. Skip\n";
   int choice;
-  std::cout << "Choose weapon: ";
+  std::cout << BLUE << "Choose weapon: " << RESETCOLOUR;
   if (!(std::cin >> choice) || choice < 0 || choice > (int)weapons.size()) {
     std::cin.clear(); std::cin.ignore(1000, '\n');
-    std::cout << "Invalid choice. Skipping.\n";
+    std::cout << RED << "Invalid choice. Skipping." << RESETCOLOUR << "\n";
     return;
   }
   if (choice == 0) return;
@@ -445,16 +446,16 @@ void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
     hero.gold -= selected.cost;
     hero.inventoryWeapons.emplace_back(selected);
     equipWeapon(hero, weapons, choice - 1);
-  } else { std::cout << "Not enough gold!\n"; }
+  } else { std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n"; }
 }
 
 // Potion shop
 void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
-  std::cout << "\n🍵 Potion Shop — You have " << hero.gold << " gold.\n";
-  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << i+1 << ". " << potionsList[i].name << " (Heal +" << potionsList[i].healAmount << ", Cost: " << potionsList[i].cost << " gold)\n"; }
+  std::cout << CYAN << "\n🍵 Potion Shop — You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
+  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << potionsList[i].name << " (Heal +" << potionsList[i].healAmount << "," << RESETCOLOUR << YELLOW << " Cost: " << potionsList[i].cost << " gold)" << RESETCOLOUR << "\n"; }
   std::cout << "0. Skip\n";
   int choice;
-  std::cout << "Choose potion: ";
+  std::cout << BLUE << "Choose potion: " << RESETCOLOUR;
   if (!(std::cin >> choice) || choice < 0 || choice > (int)potionsList.size()) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << "Invalid choice. Skipping.\n"; return; }
   if (choice == 0) return;
   Potion selected = potionsList[choice-1];
@@ -463,8 +464,8 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
     hero.potions++;
     hero.allPotions.emplace_back(selected.healAmount);
     potionIdx++;
-    std::cout << "Bought " << selected.name << ". You now have " << hero.potions << " potions.\n";
-  } else { std::cout << "Not enough gold!\n"; }
+    std::cout << GREEN << "Bought " << selected.name << ". You now have " << hero.potions << " potions." << RESETCOLOUR << "\n";
+  } else { std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n"; }
 }
 
 // Generate map with enemies, loot, traps, chests, and boss
