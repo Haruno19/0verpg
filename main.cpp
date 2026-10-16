@@ -174,6 +174,7 @@ int main(void) {
     hero.equippedArmour = armours[choice-1];
     hero.inventoryArmours.emplace_back(armours[choice-1]);
   }
+  std::cout << CYAN << hero.name << RESETCOLOUR <<" equipped " << BLUE << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
   int floors = 3;      // Number of dungeon floors
   int mapSize = 5;     // Map size (square grid)
   for (int floor = 1; floor <= floors; ++floor) {
