@@ -135,6 +135,7 @@ int main(void) {
   hero.y = 0;
   hero.level = 1;
   hero.xp = 0;
+  // Armours
   std::vector<Armour> armours = {
     {"Leather Armour", 5},
     {"Iron Armour", 10},
@@ -160,6 +161,8 @@ int main(void) {
     {"Orc", 12, 40, 30},
     {"Skeleton", 15, 50, 40}
   };
+  // Inventory weapons/armours colours for their names
+  const char *coloursArr[] = { BLUE, MAGENTA, GREEN };
   lastPotionIdxFromList = potionsList[potionsList.size() - 1].healAmount;
   std::cout << "\nChoose starting armour:\n";
   for (size_t i = 0; i < armours.size(); ++i) {
@@ -202,7 +205,7 @@ int main(void) {
         std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
-          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << BLUE << hero.inventoryArmours[i].name << RESETCOLOUR << CYAN << " (Defense +" << hero.inventoryArmours[i].defense << ")" << RESETCOLOUR << "\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % 3] << hero.inventoryArmours[i].name << RESETCOLOUR << CYAN << " (Defense +" << hero.inventoryArmours[i].defense << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose armour number: ";
         int idx;
@@ -214,7 +217,7 @@ int main(void) {
         std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
-          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << BLUE << hero.inventoryWeapons[i].name << RESETCOLOUR << CYAN << " (Attack +" << hero.inventoryWeapons[i].attack << ")" << RESETCOLOUR << "\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % 3] << hero.inventoryWeapons[i].name << RESETCOLOUR << CYAN << " (Attack +" << hero.inventoryWeapons[i].attack << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose weapon number: ";
         int idx;
