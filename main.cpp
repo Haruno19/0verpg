@@ -198,7 +198,7 @@ int main(void) {
       if (move == 'Q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       if (move == 'P') { usePotion(hero); continue; }
       if (move == 'I') {
-        std::cout << "Currently equipped armour: " << CYAN << hero.equippedArmour.name << RESETCOLOUR << "\n";
+        std::cout << "Currently equipped armour: " << CYAN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
           std::cout << i+1 << ". " << hero.inventoryArmours[i].name << " (Defense +" << hero.inventoryArmours[i].defense << ")\n";
@@ -210,7 +210,7 @@ int main(void) {
         continue;
       }
       if (move == 'O') {
-        std::cout << "Currently equipped weapon: " << CYAN << hero.equippedWeapon.name << RESETCOLOUR << "\n";
+        std::cout << "Currently equipped weapon: " << CYAN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
           std::cout << i+1 << ". " << hero.inventoryWeapons[i].name << " (Attack +" << hero.inventoryWeapons[i].attack << ")\n";
