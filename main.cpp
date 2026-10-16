@@ -34,6 +34,7 @@
 #define CYAN "\033[1;36m"
 #define RED "\033[1;31m"
 #define MAGENTA "\033[1;35m"
+#define BLUE "\033[1;34m"
 
 // Armour structure
 struct Armour {
@@ -198,10 +199,10 @@ int main(void) {
       if (move == 'Q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       if (move == 'P') { usePotion(hero); continue; }
       if (move == 'I') {
-        std::cout << "Currently equipped armour: " << CYAN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
+        std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
-          std::cout << i+1 << ". " << hero.inventoryArmours[i].name << " (Defense +" << hero.inventoryArmours[i].defense << ")\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << BLUE << hero.inventoryArmours[i].name << RESETCOLOUR << CYAN << " (Defense +" << hero.inventoryArmours[i].defense << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose armour number: ";
         int idx;
@@ -210,10 +211,10 @@ int main(void) {
         continue;
       }
       if (move == 'O') {
-        std::cout << "Currently equipped weapon: " << CYAN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
+        std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
-          std::cout << i+1 << ". " << hero.inventoryWeapons[i].name << " (Attack +" << hero.inventoryWeapons[i].attack << ")\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << BLUE << hero.inventoryWeapons[i].name << RESETCOLOUR << CYAN << " (Attack +" << hero.inventoryWeapons[i].attack << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose weapon number: ";
         int idx;
@@ -260,14 +261,14 @@ int main(void) {
 void equipArmour(Hero &hero, int index) {
   if (index < 0 || index >= (int)hero.inventoryArmours.size()) { std::cout << "Invalid armour index.\n"; return; }
   hero.equippedArmour = hero.inventoryArmours[index];
-  std::cout << hero.name << " equipped " << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR <<" equipped " << BLUE << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
 }
 
 // Equip weapon from inventory
 void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index) {
   if (index < 0 || index >= (int)weapons.size()) { std::cout << "Invalid weapon index.\n"; return; }
   hero.equippedWeapon = weapons[index];
-  std::cout << hero.name << " equipped " << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR << " equipped " << BLUE << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
 }
 
 // Battle simulation
