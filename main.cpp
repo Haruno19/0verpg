@@ -92,7 +92,7 @@ void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index);
 // Battle simulation
 bool battle(Hero &hero, Enemy enemy);
 // Loot room
-void lootRoom(Hero &hero, std::vector<Armour> &armours);
+void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &weapons);
 // Use potion
 void usePotion(Hero &hero);
 // Trap room
