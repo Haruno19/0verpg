@@ -167,7 +167,7 @@ int main(void) {
   lastPotionIdxFromList = potionsList[potionsList.size() - 1].healAmount;
   std::cout << "\nChoose starting armour:\n";
   for (size_t i = 0; i < armours.size(); ++i) {
-    std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << MAGENTA << armours[i].name << CYAN << " (Defense +" << armours[i].defense << ")" << RESETCOLOUR << "\n";
+    std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << MAGENTA << armours[i].name << CYAN << " (Defense +" << RESETCOLOUR << YELLOW << armours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
   }
   int choice;
   std::cin >> choice;
@@ -207,7 +207,8 @@ int main(void) {
         std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
-          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryArmours[i].name << RESETCOLOUR << CYAN << " (Defense +" << hero.inventoryArmours[i].defense << ")" << RESETCOLOUR << "\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryArmours[i].name << RESETCOLOUR
+          << CYAN << " (Defense +" << RESETCOLOUR << YELLOW << hero.inventoryArmours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose armour number: ";
         int idx;
@@ -219,7 +220,8 @@ int main(void) {
         std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
-          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryWeapons[i].name << RESETCOLOUR << CYAN << " (Attack +" << hero.inventoryWeapons[i].attack << ")" << RESETCOLOUR << "\n";
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryWeapons[i].name << RESETCOLOUR
+          << CYAN << " (Attack +" << RESETCOLOUR << YELLOW << hero.inventoryWeapons[i].attack << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
         }
         std::cout << "Choose weapon number: ";
         int idx;
@@ -431,7 +433,8 @@ void shop(Hero &hero, std::vector<Armour> &armours) {
 void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
   std::cout << CYAN << "\n⚔ Weapon Shop — You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
   std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << CYAN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
-  for (size_t i = 0; i < weapons.size(); ++i) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << weapons[i].name << " (Attack +" << weapons[i].attack  << "," << RESETCOLOUR << YELLOW << " Cost: " << weapons[i].cost << " gold)" << RESETCOLOUR << "\n"; }
+  for (size_t i = 0; i < weapons.size(); ++i) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << weapons[i].name << " (Attack +" << RESETCOLOUR
+    << YELLOW << weapons[i].attack  << RESETCOLOUR << "," << YELLOW << " Cost: " << weapons[i].cost << " gold" << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n"; }
   std::cout << "0. Skip\n";
   int choice;
   std::cout << BLUE << "Choose weapon: " << RESETCOLOUR;
@@ -452,7 +455,8 @@ void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
 // Potion shop
 void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
   std::cout << CYAN << "\n🍵 Potion Shop — You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
-  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << potionsList[i].name << " (Heal +" << potionsList[i].healAmount << "," << RESETCOLOUR << YELLOW << " Cost: " << potionsList[i].cost << " gold)" << RESETCOLOUR << "\n"; }
+  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << potionsList[i].name << " (Heal +" << RESETCOLOUR
+    << YELLOW << potionsList[i].healAmount << RESETCOLOUR << "," << YELLOW << " Cost: " << potionsList[i].cost << " gold" << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n"; }
   std::cout << "0. Skip\n";
   int choice;
   std::cout << BLUE << "Choose potion: " << RESETCOLOUR;
