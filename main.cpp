@@ -26,6 +26,9 @@
 #ifdef _WIN32
 #include <conio.h>
 #include <windows.h>
+#else
+#include <termios.h>
+#include <unistd.h>
 #endif /* _WIN32 */
 
 #define RESETCOLOUR "\033[0;0m"
@@ -85,6 +88,7 @@ struct Hero {
 // Used to index the last potion and pop it back from the "hero.allPotions" vector, which stores all the different potion types
 size_t potionIdx = 0U;
 size_t lastPotionIdxFromList = 0U;
+int keys[7];
 
 // Equip armour from inventory
 void equipArmour(Hero &hero, int index);
@@ -114,12 +118,16 @@ std::vector<std::vector<char>> generateMap(int size);
 void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std::vector<bool>> &visited, const Hero &hero);
 // Gain XP and check for level up
 void gainXP(Hero &her, int amount);
+// On startup setup the movement and inventories keys
+int readKey(void);
+void setupKeys(void);
 
 int main(void) {
 #ifdef _WIN32
   SetConsoleTitle("0verpg");
 #endif /*_WIN32 */
   std::srand(static_cast<unsigned>(std::time(nullptr)));
+  setupKeys();
   Hero hero;
   std::cout << "Enter hero name: ";
   std::getline(std::cin, hero.name);
@@ -197,10 +205,10 @@ int main(void) {
         << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " XP" << RESETCOLOUR << "\n";
-      std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armour, O to change weapon, Q to quit: " << RESETCOLOUR;
-      char move;
-      std::cin >> move;
-      move = std::toupper(static_cast<unsigned char>(move));
+      std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armour, O to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
+      int ch = readKey();
+      //std::cin >> move;
+      char move = std::toupper(static_cast<unsigned char>(ch));
       if (move == 'Q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       if (move == 'P') { usePotion(hero); continue; }
       if (move == 'I') {
@@ -523,4 +531,44 @@ void gainXP(Hero &hero, int amount) {
     hero.xp = 0; // reset XP after level up
     std::cout << GREEN << "*** LEVEL UP! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " is now level " << hero.level << RESETCOLOUR << "!\n";
   }
+}
+
+#ifdef _WIN32
+int readKey(void)
+{
+    int c = _getch();
+    if (c == 0 || c == 224) // in some cases on windows(?), pressing arrow keys returns two of these values, where the first is 0 or 224.
+        c = _getch() + (c<<8);
+    return c;
+}
+#else
+int readKey(void)
+{
+   char buf = 0;
+   struct termios old = {0};
+   fflush(stdout);
+   if(tcgetattr(0, &old) < 0)
+       perror("tcsetattr()");
+   old.c_lflag &= (~ICANON) & (~ECHO); // local modes = Non Canonical mode and Disable echo
+   old.c_cc[VMIN] = 1;  // control chars (MIN value) = 1
+   old.c_cc[VTIME] = 0; // control chars (TIME value) = 0 (No time)
+   if(tcsetattr(0, TCSANOW, &old) < 0)
+       perror("tcsetattr ICANON");
+   if(read(0, &buf, 1) < 0)
+       perror("read()");
+   old.c_lflag |= ICANON | ECHO; // local modes = Canonical mode and Enable echo
+   if(tcsetattr(0, TCSADRAIN, &old) < 0)
+       perror("tcsetattr ~ICANON");
+   return buf;
+}
+#endif /* _WIN32 */
+
+void setupKeys(void) {
+  int i = 0;
+  std::cout<<"Press key for ";
+  for (auto text : { "RIGHT",", UP",", LEFT",", DOWN",", Armour Inventory", ", Weapon Inventory", " comsume Potion" }) {
+    std::cout << text;
+    keys[i++] = readKey();
+  }
+  std::cout << "" << std::endl;
 }
