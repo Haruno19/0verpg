@@ -207,12 +207,11 @@ int main(void) {
         << CYAN << hero.xp << "/" << hero.level * 50 << " XP" << RESETCOLOUR << "\n";
       std::cout << YELLOW << "Move (" << static_cast<char>(keys[0]) << "/" <<  static_cast<char>(keys[1]) << "/" <<  static_cast<char>(keys[2]) << "/" <<  static_cast<char>(keys[3]) << "), "
         <<  static_cast<char>(keys[4]) << " to use potion, " <<  static_cast<char>(keys[5]) << " to change armour, " <<  static_cast<char>(keys[6]) << " to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
-      int ch = readKey();
       //std::cin >> move;
-      char move = std::toupper(static_cast<unsigned char>(ch));
-      if (move == 'Q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
-      if (move == 'P') { usePotion(hero); continue; }
-      if (move == 'I') {
+      char move = std::tolower(static_cast<unsigned char>(readKey()));
+      if (move == 'q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
+      if (move == static_cast<char>(keys[4])) { usePotion(hero); continue; }
+      if (move == static_cast<char>(keys[5])) {
         std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
@@ -225,7 +224,7 @@ int main(void) {
         equipArmour(hero, idx - 1);
         continue;
       }
-      if (move == 'O') {
+      if (move == static_cast<char>(keys[6])) {
         std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
@@ -239,10 +238,10 @@ int main(void) {
         continue;
       }
       int newX = hero.x, newY = hero.y;
-      if (move == 'W') newX--;
-      else if (move == 'S') newX++;
-      else if (move == 'A') newY--;
-      else if (move == 'D') newY++;
+      if (move == static_cast<unsigned char>(keys[1])) newX--;
+      else if (move == static_cast<unsigned char>(keys[3])) newX++;
+      else if (move == static_cast<unsigned char>(keys[2])) newY--;
+      else if (move == static_cast<unsigned char>(keys[0])) newY++;
       // Check boundaries
       if (newX < 0 || newX >= mapSize || newY < 0 || newY >= mapSize) { std::cout << RED << "❌ Can't move outside the dungeon!" << RESETCOLOUR << "\n"; continue; }
       hero.x = newX;
