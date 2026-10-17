@@ -205,7 +205,8 @@ int main(void) {
         << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " XP" << RESETCOLOUR << "\n";
-      std::cout << YELLOW << "Move (W/A/S/D), P to use potion, I to change armour, O to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
+      std::cout << YELLOW << "Move (" << static_cast<char>(keys[0]) << "/" <<  static_cast<char>(keys[1]) << "/" <<  static_cast<char>(keys[2]) << "/" <<  static_cast<char>(keys[3]) << "), "
+        <<  static_cast<char>(keys[4]) << " to use potion, " <<  static_cast<char>(keys[5]) << " to change armour, " <<  static_cast<char>(keys[6]) << " to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
       int ch = readKey();
       //std::cin >> move;
       char move = std::toupper(static_cast<unsigned char>(ch));
@@ -534,41 +535,39 @@ void gainXP(Hero &hero, int amount) {
 }
 
 #ifdef _WIN32
-int readKey(void)
-{
-    int c = _getch();
-    if (c == 0 || c == 224) // in some cases on windows(?), pressing arrow keys returns two of these values, where the first is 0 or 224.
-        c = _getch() + (c<<8);
-    return c;
+int readKey(void) {
+  int c = _getch();
+  if (c == 0 || c == 224) // in some cases on windows(?), pressing arrow keys returns two of these values, where the first is 0 or 224.
+    c = _getch() + (c<<8);
+  return c;
 }
 #else
-int readKey(void)
-{
-   char buf = 0;
-   struct termios old = {0};
-   fflush(stdout);
-   if(tcgetattr(0, &old) < 0)
-       perror("tcsetattr()");
-   old.c_lflag &= (~ICANON) & (~ECHO); // local modes = Non Canonical mode and Disable echo
-   old.c_cc[VMIN] = 1;  // control chars (MIN value) = 1
-   old.c_cc[VTIME] = 0; // control chars (TIME value) = 0 (No time)
-   if(tcsetattr(0, TCSANOW, &old) < 0)
-       perror("tcsetattr ICANON");
-   if(read(0, &buf, 1) < 0)
-       perror("read()");
-   old.c_lflag |= ICANON | ECHO; // local modes = Canonical mode and Enable echo
-   if(tcsetattr(0, TCSADRAIN, &old) < 0)
-       perror("tcsetattr ~ICANON");
-   return buf;
+int readKey(void) {
+  char buf = 0;
+  struct termios old = {0};
+  fflush(stdout);
+  if(tcgetattr(0, &old) < 0)
+    perror("tcsetattr()");
+  old.c_lflag &= (~ICANON); // local modes = Non Canonical mode and Disable echo
+  old.c_cc[VMIN] = 1;  // control chars (MIN value) = 1
+  old.c_cc[VTIME] = 0; // control chars (TIME value) = 0 (No time)
+  if(tcsetattr(0, TCSANOW, &old) < 0)
+    perror("tcsetattr ICANON");
+  if(read(0, &buf, 1) < 0)
+    perror("read()");
+  old.c_lflag |= ICANON; // local modes = Canonical mode and Enable echo
+  if(tcsetattr(0, TCSADRAIN, &old) < 0)
+    perror("tcsetattr ~ICANON");
+  return buf;
 }
 #endif /* _WIN32 */
 
 void setupKeys(void) {
-  int i = 0;
+  int x = 0;
   std::cout<<"Press key for ";
   for (auto text : { "RIGHT",", UP",", LEFT",", DOWN",", Armour Inventory", ", Weapon Inventory", " comsume Potion" }) {
     std::cout << text;
-    keys[i++] = readKey();
+    keys[x++] = readKey();
   }
-  std::cout << "" << std::endl;
+  std::cout << BLUE << "\nKeys established\n" << RESETCOLOUR << std::endl;
 }
