@@ -205,7 +205,7 @@ int main(void) {
         << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " XP" << RESETCOLOUR << "\n";
-      std::cout << YELLOW << "Move (" << static_cast<unsigned char>(keys[0]) << "/" <<  static_cast<unsigned char>(keys[1]) << "/" <<  static_cast<unsigned char>(keys[2]) << "/" <<  static_cast<unsigned char>(keys[3]) << "), "
+      std::cout << YELLOW << "Move (" << static_cast<unsigned char>(keys[1]) << "/" <<  static_cast<unsigned char>(keys[0]) << "/" <<  static_cast<unsigned char>(keys[2]) << "/" <<  static_cast<unsigned char>(keys[3]) << "), "
         <<  static_cast<unsigned char>(keys[6]) << " to use potion, " <<  static_cast<unsigned char>(keys[4]) << " to change armour, " <<  static_cast<unsigned char>(keys[5]) << " to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
       //std::cin >> move;
       char move = std::tolower(static_cast<unsigned char>(readKey()));
@@ -547,14 +547,14 @@ int readKey(void) {
   fflush(stdout);
   if(tcgetattr(0, &old) < 0)
     perror("tcsetattr()");
-  old.c_lflag &= (~ICANON); // local modes = Non Canonical mode and Disable echo
+  old.c_lflag &= (~ICANON); // local modes = Non Canonical mode
   old.c_cc[VMIN] = 1;  // control chars (MIN value) = 1
   old.c_cc[VTIME] = 0; // control chars (TIME value) = 0 (No time)
   if(tcsetattr(0, TCSANOW, &old) < 0)
     perror("tcsetattr ICANON");
   if(read(0, &buf, 1) < 0)
     perror("read()");
-  old.c_lflag |= ICANON; // local modes = Canonical mode and Enable echo
+  old.c_lflag |= ICANON; // local modes = Canonical mode
   if(tcsetattr(0, TCSADRAIN, &old) < 0)
     perror("tcsetattr ~ICANON");
   return buf;
@@ -564,7 +564,7 @@ int readKey(void) {
 void setupKeys(void) {
   int x = 0;
   std::cout<<"Press key for ";
-  for (auto text : { "RIGHT",", UP",", LEFT",", DOWN",", Armour Inventory", ", Weapon Inventory", " comsume Potion" }) {
+  for (auto text : { "RIGHT",", UP",", LEFT",", DOWN",", Armour Inventory", ", Weapon Inventory", ", and Consume a Potion" }) {
     std::cout << text;
     keys[x++] = readKey();
   }
