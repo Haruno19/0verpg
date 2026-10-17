@@ -205,13 +205,13 @@ int main(void) {
         << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " XP" << RESETCOLOUR << "\n";
-      std::cout << YELLOW << "Move (" << static_cast<char>(keys[0]) << "/" <<  static_cast<char>(keys[1]) << "/" <<  static_cast<char>(keys[2]) << "/" <<  static_cast<char>(keys[3]) << "), "
-        <<  static_cast<char>(keys[4]) << " to use potion, " <<  static_cast<char>(keys[5]) << " to change armour, " <<  static_cast<char>(keys[6]) << " to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
+      std::cout << YELLOW << "Move (" << static_cast<unsigned char>(keys[0]) << "/" <<  static_cast<unsigned char>(keys[1]) << "/" <<  static_cast<unsigned char>(keys[2]) << "/" <<  static_cast<unsigned char>(keys[3]) << "), "
+        <<  static_cast<unsigned char>(keys[4]) << " to use potion, " <<  static_cast<unsigned char>(keys[5]) << " to change armour, " <<  static_cast<unsigned char>(keys[6]) << " to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
       //std::cin >> move;
       char move = std::tolower(static_cast<unsigned char>(readKey()));
       if (move == 'q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
-      if (move == static_cast<char>(keys[4])) { usePotion(hero); continue; }
-      if (move == static_cast<char>(keys[5])) {
+      if (move == static_cast<unsigned char>(keys[4])) { usePotion(hero); continue; }
+      if (move == static_cast<unsigned char>(keys[5])) {
         std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Armours:\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
@@ -224,7 +224,7 @@ int main(void) {
         equipArmour(hero, idx - 1);
         continue;
       }
-      if (move == static_cast<char>(keys[6])) {
+      if (move == static_cast<unsigned char>(keys[6])) {
         std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
         std::cout << "Inventory Weapons:\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
