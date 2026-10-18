@@ -22,6 +22,7 @@
 #include <ctime>
 #include <cctype>
 #include <random>
+#include <fstream>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -30,6 +31,8 @@
 #include <termios.h>
 #include <unistd.h>
 #endif /* _WIN32 */
+
+#include "json.hpp"
 
 #define RESETCOLOUR "\033[0;0m"
 #define YELLOW "\033[1;33m"
@@ -89,6 +92,13 @@ struct Hero {
 size_t potionIdx = 0U;
 size_t lastPotionIdxFromList = 0U;
 int keys[7];
+std::string configHome = (std::getenv("HOME") ? std::string(std::getenv("HOME")) + std::string("/") : std::string("./")) + ".0verpg.json";
+std::string userLang = "en";
+std::ifstream cfg(configHome);
+
+using json = nlohmann::json;
+json config;
+#define CONF config[userLang]
 
 // Equip armour from inventory
 void equipArmour(Hero &hero, int index);
@@ -121,21 +131,26 @@ void gainXP(Hero &her, int amount);
 // On startup setup the movement and inventories keys
 int readKey(void);
 void setupKeys(void);
+std::string trim(std::string str);
 
-int main(void) {
+int main(int argc, char *argv[]) {
 #ifdef _WIN32
   SetConsoleTitle("0verpg");
 #endif /*_WIN32 */
   std::srand(static_cast<unsigned>(std::time(nullptr)));
+  if (argc >= 2) { userLang = std::string(argv[1]); }
+  if (!cfg) { std::cerr << "Error: Could not open " << configHome << "\n"; return EXIT_FAILURE; }
+  cfg >> config;
+  cfg.close();
   setupKeys();
   Hero hero;
-  std::cout << "Enter hero name: ";
+  std::cout << trim(CONF["enterheroname"]);
   std::getline(std::cin, hero.name);
   hero.health = 100;
   hero.baseDefense = 5;
   hero.baseAttack = 5;
-  hero.equippedArmour = {"None", 0};
-  hero.equippedWeapon = {"Fists", 0, 0};
+  hero.equippedArmour = {trim(CONF["none"]), 0};
+  hero.equippedWeapon = {trim(CONF["fists"]), 0, 0};
   hero.potions = 0;
   hero.allPotions.emplace_back(20);
   hero.gold = 50;
@@ -145,29 +160,29 @@ int main(void) {
   hero.xp = 0;
   // Armours
   std::vector<Armour> armours = {
-    {"Leather Armour", 5},
-    {"Iron Armour", 10},
-    {"Magic Armour", 15},
-    {"Dragon Armour", 20}
+    {trim(CONF["armour1"]), 5},
+    {trim(CONF["armour2"]), 10},
+    {trim(CONF["armour3"]), 15},
+    {trim(CONF["armour4"]), 20}
   };
   // Weapons
   std::vector<Weapon> weapons = {
-    {"Wooden Sword", 5, 20},
-    {"Steel Sword", 10, 40},
-    {"Magic Sword", 15, 60},
-    {"Dragon Slayer", 25, 100}
+    {trim(CONF["weapon1"]), 5, 20},
+    {trim(CONF["weapon2"]), 10, 40},
+    {trim(CONF["weapon3"]), 15, 60},
+    {trim(CONF["weapon4"]), 25, 100}
     };
   // Potions
   std::vector<Potion> potionsList = {
-    {"Small Potion", 20, 15},
-    {"Large Potion", 40, 30},
-    {"Huge Potion", 60, 45}
+    {trim(CONF["potion1"]), 20, 15},
+    {trim(CONF["potion2"]), 40, 30},
+    {trim(CONF["potion3"]), 60, 45}
   };
   // per level enemies
   std::vector<Enemy> enemies = {
-    {"Goblin", 8, 30, 20},
-    {"Orc", 12, 40, 30},
-    {"Skeleton", 15, 50, 40}
+    {trim(CONF["enemy1"]), 8, 30, 20},
+    {trim(CONF["enemy1"]), 12, 40, 30},
+    {trim(CONF["enemy1"]), 15, 50, 40}
   };
   // Inventory weapons/armours colours for their names
   const char *coloursArr[] = { BLUE, MAGENTA, GREEN, RED, YELLOW, CYAN };
@@ -180,9 +195,9 @@ int main(void) {
   unsigned char potionKey = static_cast<unsigned char>(keys[6]);
   unsigned char armourKey = static_cast<unsigned char>(keys[4]);
   unsigned char weaponKey = static_cast<unsigned char>(keys[5]);
-  std::cout << "\nChoose starting armour:\n";
+  std::cout << "\n" << trim(CONF["chooseStartingArmour"]) << "\n";
   for (size_t i = 0; i < armours.size(); ++i) {
-    std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << MAGENTA << armours[i].name << CYAN << " (Defense +" << RESETCOLOUR << YELLOW << armours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
+    std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << MAGENTA << armours[i].name << CYAN << " (" << trim(CONF["defense"]) << " +" << RESETCOLOUR << YELLOW << armours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
   }
   int choice;
   std::cin >> choice;
@@ -190,7 +205,7 @@ int main(void) {
     hero.equippedArmour = armours[choice-1];
     hero.inventoryArmours.emplace_back(armours[choice-1]);
   }
-  std::cout << CYAN << hero.name << RESETCOLOUR <<" equipped " << BLUE << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR <<" equipped " << BLUE << hero.equippedArmour.name << " (" << trim(CONF["defense"]) << " +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
   int floors = 3;      // Number of dungeon floors
   int mapSize = 5;     // Map size (square grid)
   for (int floor = 1; floor <= floors; ++floor) {
@@ -203,42 +218,42 @@ int main(void) {
     bool floorCleared = false;
     weaponShop(hero, weapons);
     potionShop(hero, potionsList);
-    std::cout << YELLOW << "\n🏰 Floor " << floor << " begins!" << RESETCOLOUR << "\n";
+    std::cout << YELLOW << "\n🏰 " << trim(CONF["floor"]) << " " << floor << " " << trim(CONF["begins"]) << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
       displayMap(dungeon, visited, hero);
       // Emojis from - www.emojishark.com
-      std::cout << YELLOW << "\n💰 Gold: " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "💗 HP: " << hero.health << RESETCOLOUR
-        << " | " << GREEN << "🧪 Potions: " << hero.potions << RESETCOLOUR << " | "
-        << "💀" << CYAN << " Attack: " << hero.baseAttack + hero.equippedWeapon.attack << " Defense: " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
-        << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " Level: " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
-        << CYAN << hero.xp << "/" << hero.level * 50 << " XP" << RESETCOLOUR << "\n";
-      std::cout << YELLOW << "Move (" << wKey << "/" <<  dKey << "/" <<  aKey << "/" <<  sKey << "), " <<  potionKey << " to use potion, "
-        <<  armourKey << " to change armour, " <<  weaponKey << " to change weapon, Q to quit: " << RESETCOLOUR << std::endl;
+      std::cout << YELLOW << "\n💰 " << trim(CONF["gold"]) << ": " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "💗 " << trim(CONF["hp"]) << ": " << hero.health << RESETCOLOUR
+        << " | " << GREEN << "🧪 " << trim(CONF["potions"]) << ": " << hero.potions << RESETCOLOUR << " | "
+        << "💀" << CYAN << " " << trim(CONF["attack"]) << ": " << hero.baseAttack + hero.equippedWeapon.attack << " " << trim(CONF["defense"]) << ": " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
+        << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["level"]) << ": " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
+        << CYAN << hero.xp << "/" << hero.level * 50 << " " << trim(CONF["xp"]) << RESETCOLOUR << "\n";
+      std::cout << YELLOW << trim(CONF["move"]) <<  " (" << wKey << "/" <<  dKey << "/" <<  aKey << "/" <<  sKey << "), " <<  potionKey << " " << trim(CONF["usePotion"]) << ", "
+        <<  armourKey << " " << trim(CONF["toChangeArmour"]) << ", " <<  weaponKey << " " << trim(CONF["toChangeWeapon"]) << ", Q " << trim(CONF["toQuit"]) << ": " << RESETCOLOUR << std::endl;
       //std::cin >> move;
       char move = std::tolower(static_cast<unsigned char>(readKey()));
       if (move == 'q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       if (move == potionKey) { usePotion(hero); continue; }
       if (move == armourKey) {
-        std::cout << MAGENTA << "Currently equipped armour: " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
-        std::cout << "Inventory Armours:\n";
+        std::cout << MAGENTA << trim(CONF["curEquippedArmour"]) << ": " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (" << trim(CONF["defense"]) << " +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
+        std::cout << trim(CONF["inventoryArmours"]) << ":\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
           std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryArmours[i].name << RESETCOLOUR
-          << CYAN << " (Defense +" << RESETCOLOUR << YELLOW << hero.inventoryArmours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
+          << CYAN << " (" << trim(CONF["defense"]) << "+" << RESETCOLOUR << YELLOW << hero.inventoryArmours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
         }
-        std::cout << "Choose armour number: ";
+        std::cout << trim(CONF["chooseArmourNumber"]) << ": ";
         int idx;
         std::cin >> idx;
         equipArmour(hero, idx - 1);
         continue;
       }
       if (move == weaponKey) {
-        std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
-        std::cout << "Inventory Weapons:\n";
+        std::cout << MAGENTA << trim(CONF["curEquippedWeapon"]) << ": " << RESETCOLOUR << GREEN << hero.equippedWeapon.name << " (" << trim(CONF["attack"]) << " +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
+        std::cout << trim(CONF["inventoryWeapons"]) << ":\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
           std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryWeapons[i].name << RESETCOLOUR
-          << CYAN << " (Attack +" << RESETCOLOUR << YELLOW << hero.inventoryWeapons[i].attack << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
+          << CYAN << " (" << trim(CONF["attack"]) << " +" << RESETCOLOUR << YELLOW << hero.inventoryWeapons[i].attack << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
         }
-        std::cout << "Choose weapon number: ";
+        std::cout << trim(CONF["chooseWeaponNumber"]) << ": ";
         int idx;
         std::cin >> idx;
         equipWeapon(hero, hero.inventoryWeapons, idx - 1);
@@ -250,12 +265,12 @@ int main(void) {
       else if (move == aKey) newY--;
       else if (move == dKey) newY++;
       // Check boundaries
-      if (newX < 0 || newX >= mapSize || newY < 0 || newY >= mapSize) { std::cout << RED << "❌ Can't move outside the dungeon!" << RESETCOLOUR << "\n"; continue; }
+      if (newX < 0 || newX >= mapSize || newY < 0 || newY >= mapSize) { std::cout << RED << "❌ " << trim(CONF["cantMoveOutsideDungeon"]) << RESETCOLOUR << "\n"; continue; }
       hero.x = newX;
       hero.y = newY;
       visited[hero.x][hero.y] = true;
       // Explore the room
-      if (!exploreRoom(hero, enemies, armours, weapons, dungeon[hero.x][hero.y])) { std::cout << RED << "\n💀 Game Over!" << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
+      if (!exploreRoom(hero, enemies, armours, weapons, dungeon[hero.x][hero.y])) { std::cout << RED << "\n💀 " << trim(CONF["gameOver"]) << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       // Check if boss defeated
       bool bossAlive = false;
       for (int i = 0; i < mapSize; ++i) {
@@ -264,64 +279,64 @@ int main(void) {
         }
       }
       if (!bossAlive) {
-        std::cout << GREEN << "\n✅ Floor " << floor << " cleared!" << RESETCOLOUR << "\n";
+        std::cout << GREEN << "\n✅ " << trim(CONF["floor"]) << " " << floor << " " << trim(CONF["cleared"]) << RESETCOLOUR << "\n";
         floorCleared = true;
         // Heal hero slightly after round
         hero.health += 15;
         if (hero.health > 100) hero.health = 100;
-        std::cout << CYAN << hero.name << RESETCOLOUR << " rests and recovers to " << GREEN << hero.health << RESETCOLOUR << " HP." << "\n";
+        std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["restsAndRecoversTo"]) << " " << GREEN << hero.health << RESETCOLOUR << " " << trim(CONF["hp"]) << "." << "\n";
       }
     }
     // Shop between floors
     if (floorCleared && floor < floors) { shop(hero, armours); }
   }
-  std::cout << GREEN << "\n🎉 Congratulations! You defeated all bosses and cleared the dungeon!" << RESETCOLOUR << "\n";
+  std::cout << GREEN << "\n🎉 " << trim(CONF["win"]) << RESETCOLOUR << "\n";
   return EXIT_SUCCESS;
 }
 
 // Equip armour from inventory
 void equipArmour(Hero &hero, int index) {
-  if (index < 0 || index >= (int)hero.inventoryArmours.size()) { std::cout << "Invalid armour index.\n"; return; }
+  if (index < 0 || index >= (int)hero.inventoryArmours.size()) { std::cout << trim(CONF["invalidArmourIndex"]) << ".\n"; return; }
   hero.equippedArmour = hero.inventoryArmours[index];
-  std::cout << CYAN << hero.name << RESETCOLOUR <<" equipped " << BLUE << hero.equippedArmour.name << " (Defense +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedArmour.name << " (" << trim(CONF["defense"]) << " +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
 }
 
 // Equip weapon from inventory
 void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index) {
-  if (index < 0 || index >= (int)weapons.size()) { std::cout << "Invalid weapon index.\n"; return; }
+  if (index < 0 || index >= (int)weapons.size()) { std::cout << trim(CONF["invalidWeaponIndex"]) << ".\n"; return; }
   hero.equippedWeapon = weapons[index];
-  std::cout << CYAN << hero.name << RESETCOLOUR << " equipped " << BLUE << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR << " " <<  trim(CONF["equipped"]) << " " << BLUE << hero.equippedWeapon.name << " (" <<  trim(CONF["attack"]) << " +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
 }
 
 // Battle simulation
 bool battle(Hero &hero, Enemy enemy) {
-  std::cout << "\n⚔ Battle: " << CYAN << hero.name << RESETCOLOUR << " vs " << RED << enemy.name << RESETCOLOUR << "\n";
+  std::cout << "\n⚔ " << trim(CONF["battle"]) << " " << CYAN << hero.name << RESETCOLOUR << " vs " << RED << enemy.name << RESETCOLOUR << "\n";
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
-    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << "CRITICAL HIT!" << RESETCOLOUR << "\n"; }
+    if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << trim(CONF["criticalHit"]) << "!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
-    std::cout << CYAN << hero.name << RESETCOLOUR << " attacks for " << YELLOW << heroAttack << RESETCOLOUR <<" damage! " << enemy.name << " HP: " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
+    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! " << enemy.name << " HP: " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
     if (enemy.health <= 0) {
-      std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " is defeated!" << RESETCOLOUR << "\n";
+      std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " " << trim(CONF["isDefeated"]) << "!" << RESETCOLOUR << "\n";
       hero.gold += 30;
-      std::cout << CYAN << hero.name << RESETCOLOUR << " earns " << YELLOW << "30" << RESETCOLOUR << " gold! Total gold: " << YELLOW << hero.gold << RESETCOLOUR << "\n";
+      std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["earns"]) << " " << YELLOW << "30" << RESETCOLOUR << " " << trim(CONF["goldTotalGold"]) << ": " << YELLOW << hero.gold << RESETCOLOUR << "\n";
       gainXP(hero, enemy.xpReward);
       // Random loot drop
       int lootChance = std::rand() % 3;
-      if (lootChance == 0) { hero.potions++; std::cout << YELLOW << "Loot drop: Potion found! Total potions: " << RESETCOLOUR << hero.potions << "\n"; }
+      if (lootChance == 0) { hero.potions++; std::cout << YELLOW << trim(CONF["lootDropPotion"]) << ": " << RESETCOLOUR << hero.potions << "\n"; }
       return true;
     }
     // Enemy attacks
     int totalDefense = hero.baseDefense + hero.equippedArmour.defense;
     int damage = enemy.attack - totalDefense;
     if (damage < 0) damage = 0;
-    if(std::rand() % 100 < 15) { std::cout << MAGENTA << hero.name << RESETCOLOUR << GREEN << " dodged!" << RESETCOLOUR << "\n"; damage = 0; }
+    if(std::rand() % 100 < 15) { std::cout << MAGENTA << hero.name << RESETCOLOUR << GREEN << " " << trim(CONF["dodged"]) << "!" << RESETCOLOUR << "\n"; damage = 0; }
     hero.health -= damage;
-    std::cout << RED << enemy.name << RESETCOLOUR << " attacks for " << RED << enemy.attack << RESETCOLOUR << " (Blocked: " << MAGENTA << totalDefense << RESETCOLOUR << ") Damage taken: " << YELLOW << damage << RESETCOLOUR << " | " << YELLOW << hero.name << RESETCOLOUR << " HP: " << GREEN << std::max(0, hero.health) << RESETCOLOUR << "\n";
+    std::cout << RED << enemy.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << RED << enemy.attack << RESETCOLOUR << " (" << trim(CONF["blocked"]) << " " << MAGENTA << totalDefense << RESETCOLOUR << ") " << trim(CONF["damageTaken"]) << ": " << YELLOW << damage << RESETCOLOUR << " | " << YELLOW << hero.name << RESETCOLOUR << " " << trim(CONF["hp"]) << ": " << GREEN << std::max(0, hero.health) << RESETCOLOUR << "\n";
     // Auto-use potion if low HP
-    if (hero.health <= 30 && hero.potions > 0) { std::cout << CYAN << "⚠ Low HP! Auto-using potion..." << RESETCOLOUR << "\n"; usePotion(hero); }
-    if (hero.health <= 0) { std::cout << RED << hero.name << " has fallen..." << RESETCOLOUR << "\n"; return false; }
+    if (hero.health <= 30 && hero.potions > 0) { std::cout << CYAN << "⚠ " << trim(CONF["autoUsingPotion"]) << "..." << RESETCOLOUR << "\n"; usePotion(hero); }
+    if (hero.health <= 0) { std::cout << RED << hero.name << " " << trim(CONF["hasFallen"]) << "..." << RESETCOLOUR << "\n"; return false; }
   }
   return false;
 }
@@ -331,17 +346,17 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
   int lootType = std::rand() % 3;
   if (lootType == 0) {
     hero.potions++;
-    std::cout << GREEN << "🧪 Found a health potion! Potions: " << hero.potions << RESETCOLOUR << "\n";
+    std::cout << GREEN << "🧪 " << trim(CONF["foundHealthPotion"]) << ": " << hero.potions << RESETCOLOUR << "\n";
   }
   else if (lootType == 1) {
     Weapon newWeapon = weapons[std::rand() % weapons.size()];
     hero.inventoryWeapons.emplace_back(newWeapon);
-    std::cout << GREEN << "⚔ Found new weapon: " << newWeapon.name << " (Attack +" << newWeapon.attack << ")" << RESETCOLOUR << "\n";
+    std::cout << GREEN << "⚔ " << trim(CONF["foundNewWeapon"]) << ": " << newWeapon.name << " (" << trim(CONF["attack"]) << " +" << newWeapon.attack << ")" << RESETCOLOUR << "\n";
   }
   else {
     Armour newArmour = armours[std::rand() % armours.size()];
     hero.inventoryArmours.emplace_back(newArmour);
-    std::cout << GREEN << "🛡 Found new armour: " << newArmour.name << " (Defense +" << newArmour.defense << ")" << RESETCOLOUR << "\n";
+    std::cout << GREEN << "🛡 " << trim(CONF["foundNewArmour"]) << ": " << newArmour.name << " (" << trim(CONF["defense"]) << " +" << newArmour.defense << ")" << RESETCOLOUR << "\n";
   }
 }
 
@@ -355,9 +370,9 @@ void usePotion(Hero &hero) {
     if (hero.health > 100) { hero.health = 100; }
     hero.potions--;
     hero.allPotions.pop_back();
-    std::cout << GREEN << "Potion used!" << RESETCOLOUR << "  +" << heal << " HP | Current HP: " << MAGENTA << hero.health << RESETCOLOUR << "\n";
+    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << heal << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << RESETCOLOUR << "\n";
   } else {
-    std::cout << RED << "No potions available!" << RESETCOLOUR << "\n";
+    std::cout << RED << trim(CONF["noPotionsAvailable"]) << "!" << RESETCOLOUR << "\n";
   }
 }
 
@@ -365,7 +380,7 @@ void usePotion(Hero &hero) {
 bool trapRoom(Hero &hero) {
   int damage = 5 + std::rand() % 16; // 5-20 damage
   hero.health -= damage;
-  std::cout << RED << "💥 Trap triggered! You take " << damage << " damage. HP: " << hero.health << RESETCOLOUR << "\n";
+  std::cout << RED << "💥 " << trim(CONF["trapTriggered"]) << " " << damage << " " << trim(CONF["damageHP"]) <<  ": " << hero.health << RESETCOLOUR << "\n";
   return hero.health > 0;
 }
 
@@ -375,11 +390,11 @@ void chestRoom(Hero &hero, std::vector<Armour> &armours) {
   if (rewardType == 0) {
     int goldFound = 10 + std::rand() % 41; // 10-50 gold
     hero.gold += goldFound;
-    std::cout << GREEN << "💰 Found a treasure chest with " << goldFound << " gold! Total gold: " << hero.gold << RESETCOLOUR << "\n";
+    std::cout << GREEN << "💰 " << trim(CONF["foundTreasureChestWith"]) << goldFound << " " << trim(CONF["goldTotalGold"]) << ": " << hero.gold << RESETCOLOUR << "\n";
   } else {
     Armour rareArmour = armours[std::rand() % armours.size()];
     hero.inventoryArmours.emplace_back(rareArmour);
-    std::cout << GREEN << "✨ Found rare armour: " << rareArmour.name << " (Defense +" << rareArmour.defense << RESETCOLOUR << ")\n";
+    std::cout << GREEN << "✨ " << trim(CONF["foundRareArmour"]) << ": " << rareArmour.name << " (" << trim(CONF["defense"]) << " +" << rareArmour.defense << RESETCOLOUR << ")\n";
   }
 }
 
@@ -394,15 +409,15 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &a
     cell = '.';
     return true;
   } else if (cell == 'B') {
-    Enemy boss = {"Dungeon Boss", 25, 80, 50};
+    Enemy boss = {trim(CONF["dungeonBoss"]), 25, 80, 50};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'G') {
-    Enemy boss = {"Arena Boss", 26, 85, 60};
+    Enemy boss = {trim(CONF["arenaBoss"]), 26, 85, 60};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'Z') {
-    Enemy boss = {"Tarkan Boss", 27, 90, 70};
+    Enemy boss = {trim(CONF["tarkanBoss"]), 27, 90, 70};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'T') {
@@ -413,16 +428,16 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &a
     cell = '.';
     return true;
   } else {
-    std::cout << "🚪 Empty room.\n";
+    std::cout << "🚪 " << trim(CONF["emptyRoom"]) << ".\n";
     return true;
   }
 }
 
 // Shop system
 void shop(Hero &hero, std::vector<Armour> &armours) {
-  std::cout << CYAN << "\n🏪 Welcome to the shop! You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
-  std::cout << YELLOW << "1." << RESETCOLOUR << BLUE << " Buy Potion " << RESETCOLOUR << YELLOW << "(20 gold)" << RESETCOLOUR << "\n";
-  std::cout << YELLOW << "2." << RESETCOLOUR << BLUE << " Buy Armour Upgrade "<< RESETCOLOUR << YELLOW << "(50 gold)" << RESETCOLOUR << "\n";
+  std::cout << CYAN << "\n🏪 " << trim(CONF["welcomeYouHave"]) << " " << RESETCOLOUR << YELLOW << hero.gold << " " << trim(CONF["gold"]) << "." << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "1." << RESETCOLOUR << BLUE << " " << trim(CONF["buyPotion"]) << " " << RESETCOLOUR << YELLOW << "(20 " << trim(CONF["gold"]) << ")" << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "2." << RESETCOLOUR << BLUE << " " << trim(CONF["buyArmourUpgrade"]) << " " << RESETCOLOUR << YELLOW << "(50 " << trim(CONF["gold"]) << ")" << RESETCOLOUR << "\n";
   std::cout << "3. Exit Shop\n";
   int choice;
   std::cin >> choice;
@@ -430,32 +445,32 @@ void shop(Hero &hero, std::vector<Armour> &armours) {
     if (hero.gold >= 20) {
       hero.gold -= 20;
       hero.potions++;
-      std::cout << GREEN << "Bought a potion! Potions: " << hero.potions << RESETCOLOUR << "\n";
+      std::cout << GREEN << trim(CONF["boughtPotion"]) << ": " << hero.potions << RESETCOLOUR << "\n";
     } else {
-      std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n";
+      std::cout << RED << trim(CONF["notEnoughGold"]) << "!" << RESETCOLOUR << "\n";
     }
   } else if (choice == 2) {
     if (hero.gold >= 50) {
       hero.gold -= 50;
       Armour newArmour = armours[std::rand() % armours.size()];
       hero.inventoryArmours.emplace_back(newArmour);
-      std::cout << BLUE << "Bought armour: " << newArmour.name << " (Defense +" << newArmour.defense << ")" << RESETCOLOUR << "\n";
-    } else { std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n"; }
-  } else { std::cout << YELLOW << "Leaving shop..." << RESETCOLOUR << "\n"; }
+      std::cout << BLUE << trim(CONF["boughtArmour"]) << ": " << newArmour.name << " (" << trim(CONF["defense"]) << " +" << newArmour.defense << ")" << RESETCOLOUR << "\n";
+    } else { std::cout << RED << trim(CONF["notEnoughGold"]) << "!" << RESETCOLOUR << "\n"; }
+  } else { std::cout << YELLOW << trim(CONF["leavingShop"]) << "..." << RESETCOLOUR << "\n"; }
 }
 
 // Weapon shop system
 void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
-  std::cout << CYAN << "\n⚔ Weapon Shop — You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
-  std::cout << MAGENTA << "Currently equipped weapon: " << RESETCOLOUR << CYAN << hero.equippedWeapon.name << " (Attack +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
-  for (size_t i = 0; i < weapons.size(); ++i) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << weapons[i].name << " (Attack +" << RESETCOLOUR
-    << YELLOW << weapons[i].attack  << RESETCOLOUR << "," << YELLOW << " Cost: " << weapons[i].cost << " gold" << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n"; }
-  std::cout << "0. Skip\n";
+  std::cout << CYAN << "\n⚔ " << trim(CONF["weaponShopYouHave"]) << " " << RESETCOLOUR << YELLOW << hero.gold << " " << trim(CONF["gold"]) << "." << RESETCOLOUR << "\n";
+  std::cout << MAGENTA << trim(CONF["curEquippedWeapon"]) << ": " << RESETCOLOUR << CYAN << hero.equippedWeapon.name << " (" << trim(CONF["attack"]) << " +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
+  for (size_t i = 0; i < weapons.size(); ++i) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << weapons[i].name << " (" << trim(CONF["attack"]) << " +" << RESETCOLOUR
+    << YELLOW << weapons[i].attack  << RESETCOLOUR << "," << YELLOW << " " << trim(CONF["cost"]) << ": " << weapons[i].cost << " " << trim(CONF["gold"]) << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n"; }
+  std::cout << "0. " << trim(CONF["skip"]) << "\n";
   int choice;
-  std::cout << BLUE << "Choose weapon: " << RESETCOLOUR;
+  std::cout << BLUE << trim(CONF["chooseWeaponNumber"]) << ": " << RESETCOLOUR;
   if (!(std::cin >> choice) || choice < 0 || choice > (int)weapons.size()) {
     std::cin.clear(); std::cin.ignore(1000, '\n');
-    std::cout << RED << "Invalid choice. Skipping." << RESETCOLOUR << "\n";
+    std::cout << RED << trim(CONF["invalidChoiceSkipping"]) << "." << RESETCOLOUR << "\n";
     return;
   }
   if (choice == 0) return;
@@ -464,18 +479,18 @@ void weaponShop(Hero &hero, std::vector<Weapon> &weapons) {
     hero.gold -= selected.cost;
     hero.inventoryWeapons.emplace_back(selected);
     equipWeapon(hero, weapons, choice - 1);
-  } else { std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n"; }
+  } else { std::cout << RED << trim(CONF["notEnoughGold"]) << "!" << RESETCOLOUR << "\n"; }
 }
 
 // Potion shop
 void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
-  std::cout << CYAN << "\n🍵 Potion Shop — You have " << RESETCOLOUR << YELLOW << hero.gold << " gold." << RESETCOLOUR << "\n";
-  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << potionsList[i].name << " (Heal +" << RESETCOLOUR
-    << YELLOW << potionsList[i].healAmount << RESETCOLOUR << "," << YELLOW << " Cost: " << potionsList[i].cost << " gold" << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n"; }
-  std::cout << "0. Skip\n";
+  std::cout << CYAN << "\n🍵 " << trim(CONF["potionShopYouHave"]) << " " << RESETCOLOUR << YELLOW << hero.gold << " " << trim(CONF["gold"]) << "." << RESETCOLOUR << "\n";
+  for (size_t i = 0; i < potionsList.size(); i++) { std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << CYAN << potionsList[i].name << " (" << trim(CONF["heal"]) << " +" << RESETCOLOUR
+    << YELLOW << potionsList[i].healAmount << RESETCOLOUR << "," << YELLOW << " " << trim(CONF["cost"]) << ": " << potionsList[i].cost << " " << trim(CONF["gold"]) << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n"; }
+  std::cout << "0. " << trim(CONF["skip"]) << "\n";
   int choice;
-  std::cout << BLUE << "Choose potion: " << RESETCOLOUR;
-  if (!(std::cin >> choice) || choice < 0 || choice > (int)potionsList.size()) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << "Invalid choice. Skipping.\n"; return; }
+  std::cout << BLUE << trim(CONF["choosePotion"]) << ": " << RESETCOLOUR;
+  if (!(std::cin >> choice) || choice < 0 || choice > (int)potionsList.size()) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << trim(CONF["invalidChoiceSkipping"]) << ".\n"; return; }
   if (choice == 0) return;
   Potion selected = potionsList[choice-1];
   if (hero.gold >= selected.cost) {
@@ -483,8 +498,8 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
     hero.potions++;
     hero.allPotions.emplace_back(selected.healAmount);
     potionIdx++;
-    std::cout << GREEN << "Bought " << selected.name << ". You now have " << hero.potions << " potions." << RESETCOLOUR << "\n";
-  } else { std::cout << RED << "Not enough gold!" << RESETCOLOUR << "\n"; }
+    std::cout << GREEN << trim(CONF["bought"]) << " " << selected.name << ". " << trim(CONF["youNowHave"]) << " " << hero.potions << " " << trim(CONF["potions"]) << "." << RESETCOLOUR << "\n";
+  } else { std::cout << RED << trim(CONF["notEnoughGold"]) << "!" << RESETCOLOUR << "\n"; }
 }
 
 // Generate map with enemies, loot, traps, chests, and boss
@@ -515,7 +530,7 @@ std::vector<std::vector<char>> generateMap(int size) {
 
 // Display map with fog of war
 void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std::vector<bool>> &visited, const Hero &hero) {
-  std::cout << "\n" << GREEN << "Dungeon Map:" << RESETCOLOUR << "\n";
+  std::cout << "\n" << GREEN << trim(CONF["dungeonMap"]) << ":" << RESETCOLOUR << "\n";
   for (int i = 0; i < map.size(); ++i) {
     for (int j = 0; j < map[i].size(); ++j) {
       if (i == hero.x && j == hero.y) std::cout << GREEN << 'H' << RESETCOLOUR << ' ';
@@ -529,14 +544,14 @@ void displayMap(const std::vector<std::vector<char>> &map, const std::vector<std
 // Gain XP and check for level up
 void gainXP(Hero &hero, int amount) {
   hero.xp += amount;
-  std::cout << GREEN << hero.name << RESETCOLOUR << YELLOW << " gained " << RESETCOLOUR << CYAN << amount << " XP!" << RESETCOLOUR << "\n";
+  std::cout << GREEN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["gained"]) << " " << RESETCOLOUR << CYAN << amount << " " << trim(CONF["xp"]) << "!" << RESETCOLOUR << "\n";
   if (hero.xp >= hero.level * 50) { // Level up threshold
     hero.level++;
     hero.health += 20;
     if (hero.health > 100) { hero.health = 100; }
     hero.baseAttack += 5;
     hero.xp = 0; // reset XP after level up
-    std::cout << GREEN << "*** LEVEL UP! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " is now level " << hero.level << RESETCOLOUR << "!\n";
+    std::cout << GREEN << "*** " << trim(CONF["levelUP"]) << "! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["isNowLevel"]) << " " << hero.level << RESETCOLOUR << "!\n";
   }
 }
 
@@ -552,28 +567,33 @@ int readKey(void) {
   char buf = 0;
   struct termios old = {0};
   fflush(stdout);
-  if(tcgetattr(0, &old) < 0)
-    perror("tcsetattr()");
+  if(tcgetattr(0, &old) < 0) { perror("tcsetattr()"); }
   old.c_lflag &= (~ICANON); // local modes = Non Canonical mode
   old.c_cc[VMIN] = 1;  // control chars (MIN value) = 1
   old.c_cc[VTIME] = 0; // control chars (TIME value) = 0 (No time)
-  if(tcsetattr(0, TCSANOW, &old) < 0)
-    perror("tcsetattr ICANON");
-  if(read(0, &buf, 1) < 0)
-    perror("read()");
+  if(tcsetattr(0, TCSANOW, &old) < 0) { perror("tcsetattr ICANON"); }
+  if(read(0, &buf, 1) < 0) { perror("read()"); }
   old.c_lflag |= ICANON; // local modes = Canonical mode
-  if(tcsetattr(0, TCSADRAIN, &old) < 0)
-    perror("tcsetattr ~ICANON");
+  if(tcsetattr(0, TCSADRAIN, &old) < 0) { perror("tcsetattr ~ICANON"); }
   return buf;
 }
 #endif /* _WIN32 */
 
 void setupKeys(void) {
   int x = 0;
-  std::cout<<"Press key for ";
+  std::cout << trim(CONF["pressKeyFor"]) << " ";
   for (auto text : { "RIGHT",", UP",", LEFT",", DOWN",", Armour Inventory", ", Weapon Inventory", ", and Consume a Potion" }) {
     std::cout << text;
     keys[x++] = readKey();
   }
-  std::cout << BLUE << "\nKeys established\n" << RESETCOLOUR << std::endl;
+  std::cout << BLUE << "\n" << trim(CONF["keysEstablished"]) << "\n" << RESETCOLOUR << std::endl;
+}
+
+std::string trim(std::string str) {
+  std::string buf;
+  for (auto &x : str) {
+    if (x == '"') { continue; }
+    buf.push_back(x);
+  }
+  return buf;
 }
