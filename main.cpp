@@ -181,8 +181,8 @@ int main(int argc, char *argv[]) {
   // per level enemies
   std::vector<Enemy> enemies = {
     {trim(CONF["enemy1"]), 8, 30, 20},
-    {trim(CONF["enemy1"]), 12, 40, 30},
-    {trim(CONF["enemy1"]), 15, 50, 40}
+    {trim(CONF["enemy2"]), 12, 40, 30},
+    {trim(CONF["enemy3"]), 15, 50, 40}
   };
   // Inventory weapons/armours colours for their names
   const char *coloursArr[] = { BLUE, MAGENTA, GREEN, RED, YELLOW, CYAN };
@@ -316,7 +316,7 @@ bool battle(Hero &hero, Enemy enemy) {
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
     if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << trim(CONF["criticalHit"]) << "!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
-    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! " << enemy.name << " HP: " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
+    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! " << enemy.name << " " << trim(CONF["hp"]) << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
     if (enemy.health <= 0) {
       std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " " << trim(CONF["isDefeated"]) << "!" << RESETCOLOUR << "\n";
       hero.gold += 30;
