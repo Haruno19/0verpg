@@ -13,7 +13,7 @@ cp -r .0verpg.conf ~/
 sudo make install
 ```
 
-### Don't forget to copy `.0verpg.conf` to `~/` .
+### Don't forget to copy `.0verpg.conf` to `~/` . If you are `root` user, the config must be copied to /root/ and edited there.
 
 Now to run the game type `0verpg en` this will use the English version. Currently the are two languages `en` and `bg` - Bulgarian.
 
