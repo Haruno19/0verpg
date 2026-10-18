@@ -9,11 +9,11 @@ Small Dungeon Based Game that is cross-platform available.
 
 ```make
 make -j8 # to use 8 cores/threads in parallel compile
-cp -r .0verpg.conf ~/
+cp -r .0verpg.json ~/
 sudo make install
 ```
 
-### Don't forget to copy `.0verpg.conf` to `~/` . If you are `root` user, the config must be copied to /root/ and edited there.
+### Don't forget to copy `.0verpg.json` to `~/` . If you are `root` user, the config must be copied to /root/ and edited there.
 
 Now to run the game type `0verpg en` this will use the English version. Currently the are two languages `en` and `bg` - Bulgarian.
 
@@ -78,7 +78,7 @@ In [Visual Studio Code Editor](https://code.visualstudio.com/download), go to **
 }
 ```
 
-### Don't forget to copy `.0verpg.conf` to the `C:\MingW\Bin\` folder too.
+### Don't forget to copy `.0verpg.json` to the `C:\MingW\Bin\` folder too.
 
 ### To compile the game press **CTRL** + **SHIFT** + **B** , then from the same folder start the `0verpg.bat` script.
 
