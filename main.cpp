@@ -148,8 +148,6 @@ int main(int argc, char *argv[]) {
   hero.baseAttack = 5;
   hero.equippedArmour = {trim(CONF["none"]), 0};
   hero.equippedWeapon = {trim(CONF["fists"]), 0, 0};
-  //hero.potions = 0;
-  //hero.allPotions.emplace_back(20);
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
