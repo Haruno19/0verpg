@@ -28,6 +28,7 @@
 #include <conio.h>
 #include <windows.h>
 #else
+#include <cstdio>
 #include <termios.h>
 #include <unistd.h>
 #endif /* _WIN32 */
@@ -570,6 +571,7 @@ int readKey(void) {
 }
 #endif /* _WIN32 */
 
+// Configure the movement/inventories/potion consumption
 #define GETSTR(str) CONF[str].get<std::string>().c_str()
 void setupKeys(void) {
   int x = 0;
