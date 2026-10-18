@@ -570,16 +570,19 @@ int readKey(void) {
 }
 #endif /* _WIN32 */
 
+#define GETSTR(str) CONF[str].get<std::string>().c_str()
 void setupKeys(void) {
   int x = 0;
   std::cout << trim(CONF["pressKeyFor"]) << " ";
-  for (auto text : { "RIGHT",", UP",", LEFT",", DOWN",", Armour Inventory", ", Weapon Inventory", ", and Consume a Potion" }) {
+  for (auto text : { GETSTR("right"), GETSTR("up"), GETSTR("left"), GETSTR("down"),
+      GETSTR("armourInventory"), GETSTR("weaponInventory"), GETSTR("consumeApotion") }) {
     std::cout << text;
     keys[x++] = readKey();
   }
   std::cout << BLUE << "\n" << trim(CONF["keysEstablished"]) << "\n" << RESETCOLOUR << std::endl;
 }
 
+// Trim excess quotes
 std::string trim(std::string str) {
   std::string buf;
   for (auto &x : str) {

@@ -95,7 +95,14 @@
         "levelUP": "LEVEL UP",
         "isNowLevel": "is now level",
         "pressKeyFor": "Press key for",
-        "keysEstablished": "Keys established"
+        "keysEstablished": "Keys established",
+        "armourInventory": ", Armour Inventory",
+        "weaponInventory": ", Weapon Inventory",
+        "right": "RIGHT",
+        "left": ", LEFT",
+        "up": ", UP",
+        "down": ", DOWN",
+        "consumeApotion": ", and Consume a Potion"
 
     },
   "bg": {
@@ -194,6 +201,13 @@
         "levelUP": "Качи още един Левел",
         "isNowLevel": "вече е Левел",
         "pressKeyFor": "Натисни копчета за",
-        "keysEstablished": "Kопчетата конфигурирани"
+        "keysEstablished": "Kопчетата конфигурирани",
+        "armourInventory": ", Раница на Броните",
+        "weaponInventory": ", Раница на Оръжията",
+        "right": "НА ДЯСНО",
+        "left": ", НА ЛЯВО",
+        "up": ", НА ГОРЕ",
+        "down": ", НА ДОЛУ",
+        "consumeApotion": ", и Изпий Колбичка с Кръв"
     }
 }
