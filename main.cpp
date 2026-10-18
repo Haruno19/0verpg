@@ -340,8 +340,8 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
   int lootType = std::rand() % 3;
   if (lootType == 0) {
     Potion lootPotion = potionsList[std::rand() % potionsList.size()];
-    hero.inventoryPotions.push_back(lootPotion);
-    std::cout << GREEN << "🧪 " << trim(CONF["foundHealthPotion"]) << ": " << hero.inventoryPotions.size() << RESETCOLOUR << "\n";
+    hero.inventoryPotions.emplace_back(lootPotion);
+    std::cout << GREEN << "🧪 " << trim(CONF["foundHealthPotion"]) << ": " << hero.inventoryPotions.size() << ", " << lootPotion.healAmount << trim(CONF["hp"]) << RESETCOLOUR << "\n";
   }
   else if (lootType == 1) {
     Weapon newWeapon = weapons[std::rand() % weapons.size()];
@@ -437,7 +437,7 @@ void shop(Hero &hero, std::vector<Armour> &armours, std::vector<Potion> &potions
     if (hero.gold >= 20) {
       hero.gold -= 20;
       Potion selected = potionsList[0];
-      hero.inventoryPotions.push_back(selected);
+      hero.inventoryPotions.emplace_back(selected);
       std::cout << GREEN << trim(CONF["boughtPotion"]) << ": " << hero.inventoryPotions.size() << RESETCOLOUR << "\n";
     } else {
       std::cout << RED << trim(CONF["notEnoughGold"]) << "!" << RESETCOLOUR << "\n";
@@ -488,7 +488,7 @@ void potionShop(Hero &hero, std::vector<Potion> &potionsList) {
   Potion selected = potionsList[choice-1];
   if (hero.gold >= selected.cost) {
     hero.gold -= selected.cost;
-    hero.inventoryPotions.push_back(selected);
+    hero.inventoryPotions.emplace_back(selected);
     std::cout << GREEN << trim(CONF["bought"]) << " " << selected.name << ". " << trim(CONF["youNowHave"]) << " " << hero.inventoryPotions.size() << " " << trim(CONF["potions"]) << "." << RESETCOLOUR << "\n";
   } else { std::cout << RED << trim(CONF["notEnoughGold"]) << "!" << RESETCOLOUR << "\n"; }
 }
