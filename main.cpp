@@ -81,7 +81,6 @@ struct Hero {
   std::vector<Armour> inventoryArmours;
   std::vector<Weapon> inventoryWeapons;
   std::vector<Potion> inventoryPotions;
-  //std::vector<int> allPotions;
   int potions;
   int gold;
   int x, y;
