@@ -467,6 +467,10 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &a
     chestRoom(hero, armours);
     cell = '.';
     return true;
+  } else if (cell == 'F') {
+    hero.health = hero.maxHP;
+    cell = '.';
+    return true;
   } else {
     std::cout << "🚪 " << trim(CONF["emptyRoom"]) << ".\n";
     return true;
@@ -546,11 +550,12 @@ std::vector<std::vector<char>> generateMap(int size) {
   std::vector<std::vector<char>> map(size, std::vector<char>(size, '.'));
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
-      int r = std::rand() % 6; // More variety
+      int r = std::rand() % 7; // More variety
       if (r == 0) map[i][j] = 'E'; // Enemy
       else if (r == 1) map[i][j] = 'L'; // Loot
       else if (r == 2) map[i][j] = 'T'; // Trap
       else if (r == 3) map[i][j] = 'C'; // Chest
+      else if (r == 4) map[i][j] = 'F'; // healing fountain
     }
   }
   // Place bosses in random locations
