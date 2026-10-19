@@ -107,7 +107,8 @@
         "warrior": "Warrior",
         "mage": "Mage",
         "rogue": "Rogue",
-        "paladin": "Paladin"
+        "paladin": "Paladin",
+        "classChosen": "Chosen class"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -217,6 +218,7 @@
         "warrior": "Войн",
         "mage": "Магьосник",
         "rogue": "Дивак",
-        "paladin": "Паладин"
+        "paladin": "Паладин",
+        "classChosen": "Избран клас"
     }
 }

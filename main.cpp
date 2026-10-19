@@ -149,15 +149,16 @@ int main(int argc, char *argv[]) {
   cfg >> config;
   cfg.close();
   setupKeys();
-  int classChoice;
-  std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
-  std::cout << YELLOW << "1." << RESETCOLOUR << BLUE << trim(CONF["warrior"]) << RESETCOLOUR << "\n";
-  std::cout << YELLOW << "2." << RESETCOLOUR << BLUE << trim(CONF["mage"]) << RESETCOLOUR << "\n";
-  std::cout << YELLOW << "3." << RESETCOLOUR << BLUE << trim(CONF["rogue"]) << RESETCOLOUR << "\n";
-  std::cout << YELLOW << "4." << RESETCOLOUR << BLUE << trim(CONF["paladin"]) << RESETCOLOUR << "\n";
-  std::cin >> classChoice;
-  if (classChoice - 1 > 3 || classChoice - 1 <= 0) { classChoice = 0; }
-  Hero hero;
+  int classChoice = 0;
+  while (classChoice < 1 || classChoice > 4) {
+    std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
+    std::cout << YELLOW << "1." << RESETCOLOUR << BLUE << trim(CONF["warrior"]) << RESETCOLOUR << "\n";
+    std::cout << YELLOW << "2." << RESETCOLOUR << BLUE << trim(CONF["mage"]) << RESETCOLOUR << "\n";
+    std::cout << YELLOW << "3." << RESETCOLOUR << BLUE << trim(CONF["rogue"]) << RESETCOLOUR << "\n";
+    std::cout << YELLOW << "4." << RESETCOLOUR << BLUE << trim(CONF["paladin"]) << RESETCOLOUR << "\n";
+    std::cin >> classChoice;
+  }
+  classChoice--;
   // All of the available character classes
   std::vector<Character> characters = {
     {trim(CONF["warrior"]), 60, 5, 5},
@@ -165,10 +166,12 @@ int main(int argc, char *argv[]) {
     {trim(CONF["rogue"]), 70, 7, 3},
     {trim(CONF["paladin"]), 75, 6, 2}
   };
-  hero.name = characters[classChoice - 1].name;
-  hero.health = characters[classChoice - 1].health;
-  hero.baseDefense = characters[classChoice - 1].baseDefense;
-  hero.baseAttack = characters[classChoice - 1].baseAttack;
+  std::cout << BLUE << trim(CONF["classChosen"]) << " " << characters[classChoice].name << RESETCOLOUR << std::endl;
+  Hero hero;
+  hero.name = characters[classChoice].name;
+  hero.health = characters[classChoice].health;
+  hero.baseDefense = characters[classChoice].baseDefense;
+  hero.baseAttack = characters[classChoice].baseAttack;
   hero.equippedArmour = {trim(CONF["none"]), 0};
   hero.equippedWeapon = {trim(CONF["fists"]), 0, 0};
   hero.gold = 50;
