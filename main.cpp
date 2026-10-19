@@ -576,8 +576,8 @@ int readKey(void) {
 void setupKeys(void) {
   int x = 0;
   std::cout << trim(CONF["pressKeyFor"]) << " ";
-  for (auto text : { GETSTR("right"), GETSTR("up"), GETSTR("left"), GETSTR("down"),
-      GETSTR("armourInventory"), GETSTR("weaponInventory"), GETSTR("consumeApotion") }) {
+  for (auto text : { "RIGHT", ", UP", ", LEFT", ", DOWN",
+      ", Armour Inventory", ", Weapon Inventory", ", and Consume a Potion" }) {
     std::cout << text;
     keys[x++] = readKey();
   }
