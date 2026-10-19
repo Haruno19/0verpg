@@ -133,7 +133,12 @@
         "paladinArmour2": "Radiant Aegis",
         "paladinArmour3": "Crusader's Bulwark",
         "paladinArmour4": "Divine Guardian Plate",
-        "healingFountain": "Found a healing fountain, healing to"
+        "healingFountain": "Found a healing fountain, healing to",
+        "restoresMana": "restores 10 mana",
+        "manaUsed": "10 mana used",
+        "noManaUsed": "No mana used, decreased attacking power",
+        "mana": "Mana",
+        "addedMana": "Added 30 Mana"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -269,6 +274,11 @@
         "paladinArmour2": "Сияен щит",
         "paladinArmour3": "Защита на кръстоносеца",
         "paladinArmour4": "Плочеста броня на божествения пазител",
-        "healingFountain": "Намерен е фонтан с кръв, добавям кръв"
+        "healingFountain": "Намерен е фонтан с кръв, добавям кръв",
+        "restoresMana": "Възстановява 10 Мана",
+        "manaUsed": "10 мана използвана",
+        "noManaUsed": "Мана не е използвана, намалям атакуващата сила",
+        "mana": "Мана",
+        "addedMana": "Добавих 30 Мана"
     }
 }

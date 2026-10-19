@@ -77,6 +77,8 @@ struct Hero {
   int health;
   int baseDefense;
   int baseAttack;
+  int mana;
+  int maxMana;
   Armour equippedArmour;
   Weapon equippedWeapon;
   std::vector<Armour> inventoryArmours;
@@ -88,6 +90,7 @@ struct Hero {
   int xp;
   int level;
   int maxHP;
+  int weaponAttackDecreased;
 };
 
 // All of the available characters/heros
@@ -96,6 +99,8 @@ struct Character {
   int health;
   int baseDefense;
   int baseAttack;
+  int mana;
+  int maxMana;
 };
 
 int keys[7];
@@ -153,10 +158,10 @@ int main(int argc, char *argv[]) {
   int classChoice = 0;
   // All of the available character classes
   std::vector<Character> characters = {
-    {trim(CONF["warrior"]), 60, 5, 5},
-    {trim(CONF["mage"]), 90, 10, 1},
-    {trim(CONF["rogue"]), 70, 7, 3},
-    {trim(CONF["paladin"]), 75, 6, 2}
+    {.name=trim(CONF["warrior"]), .health = 60, .baseDefense = 5,  .baseAttack = 5, .mana = 60, .maxMana = 60},
+    {.name=trim(CONF["mage"]),    .health = 90, .baseDefense = 10, .baseAttack = 1, .mana = 90, .maxMana = 90},
+    {.name=trim(CONF["rogue"]),   .health = 70, .baseDefense = 7,  .baseAttack = 3, .mana = 70, .maxMana = 70},
+    {.name=trim(CONF["paladin"]), .health = 75, .baseDefense = 6,  .baseAttack = 2, .mana = 75, .maxMana = 75}
   };
   while (classChoice < 1 || classChoice > characters.size()) {
     std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
@@ -171,6 +176,9 @@ int main(int argc, char *argv[]) {
   hero.name = characters[classChoice].name;
   hero.health = characters[classChoice].health;
   hero.maxHP = hero.health;
+  hero.mana = characters[classChoice].mana;
+  hero.maxMana = characters[classChoice].mana;
+  hero.weaponAttackDecreased = 0;
   hero.baseDefense = characters[classChoice].baseDefense;
   hero.baseAttack = characters[classChoice].baseAttack;
   hero.equippedArmour = {trim(CONF["none"]), 0};
@@ -266,7 +274,7 @@ int main(int argc, char *argv[]) {
       // Emojis from - www.emojishark.com
       std::cout << YELLOW << "\n💰 " << trim(CONF["gold"]) << ": " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "💗 " << trim(CONF["hp"]) << ": " << hero.health << RESETCOLOUR
         << " | " << GREEN << "🧪 " << trim(CONF["potions"]) << ": " << hero.inventoryPotions.size() << RESETCOLOUR << " | "
-        << "💀" << CYAN << " " << trim(CONF["attack"]) << ": " << hero.baseAttack + hero.equippedWeapon.attack << " " << trim(CONF["defense"]) << ": " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
+        << BLUE << "♻️ " << trim(CONF["mana"]) << ": " << hero.mana << RESETCOLOUR <<  " | 💀" << CYAN << " " << trim(CONF["attack"]) << ": " << hero.baseAttack + hero.equippedWeapon.attack << " " << trim(CONF["defense"]) << ": " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["level"]) << ": " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " " << trim(CONF["xp"]) << RESETCOLOUR << "\n";
       std::cout << YELLOW << trim(CONF["move"]) <<  " (" << wKey << "/" <<  dKey << "/" <<  aKey << "/" <<  sKey << "), " <<  potionKey << " " << trim(CONF["usePotion"]) << ", "
@@ -358,12 +366,18 @@ bool battle(Hero &hero, Enemy enemy) {
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
     if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << trim(CONF["criticalHit"]) << "!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
-    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! " << enemy.name << " " << trim(CONF["hp"]) << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
+    if (hero.mana - 10 <= 0) { hero.mana = 0; } else { hero.mana -= 10; }
+    if (hero.mana == 0 && hero.weaponAttackDecreased == 0) { hero.equippedWeapon.attack -= 3; hero.weaponAttackDecreased = 1; }
+    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! "
+      << GREEN << (hero.mana > 0 ? trim(CONF["manaUsed"]) : trim(CONF["noManaUsed"])) << RESETCOLOUR << " | " << enemy.name << " " << trim(CONF["hp"]) << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
     if (enemy.health <= 0) {
       std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " " << trim(CONF["isDefeated"]) << "!" << RESETCOLOUR << "\n";
       hero.gold += 30;
       std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["earns"]) << " " << YELLOW << "30" << RESETCOLOUR << " " << trim(CONF["goldTotalGold"]) << ": " << YELLOW << hero.gold << RESETCOLOUR << "\n";
       gainXP(hero, enemy.xpReward);
+      if (hero.mana + 10 > hero.maxMana) { hero.mana = hero.maxMana; } else { hero.mana += 10; }
+      if (hero.weaponAttackDecreased == 1) { hero.equippedWeapon.attack += 3; hero.weaponAttackDecreased = 0; }
+      std::cout << BLUE << hero.name << RESETCOLOUR << " " << MAGENTA << trim(CONF["restoresMana"]) << RESETCOLOUR << "\n";
       // Random loot drop
       int lootChance = std::rand() % 3;
       if (lootChance == 0) { std::cout << YELLOW << trim(CONF["lootDropPotion"]) << ": " << RESETCOLOUR << hero.inventoryPotions.size() << "\n"; }
@@ -406,10 +420,12 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
 // Use potion
 void usePotion(Hero &hero) {
   if (hero.inventoryPotions.size() > 0) {
+    if (hero.mana + 30 > hero.maxMana) { hero.mana = hero.maxMana; } else { hero.mana += 30; }
     Potion p = hero.inventoryPotions.back();
     hero.health += p.healAmount;
     if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
-    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << RESETCOLOUR << "\n";
+    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << RESETCOLOUR
+     << " " << trim(CONF["addedMana"]) << ": " << BLUE << hero.mana << " " << trim(CONF["mana"]) << RESETCOLOUR << "\n";
     hero.inventoryPotions.pop_back();
   } else {
     std::cout << RED << trim(CONF["noPotionsAvailable"]) << "!" << RESETCOLOUR << "\n";
