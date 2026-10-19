@@ -158,11 +158,9 @@ int main(int argc, char *argv[]) {
     {trim(CONF["paladin"]), 75, 6, 2}
   };
   while (classChoice < 1 || classChoice > characters.size()) {
-    int indexNum = 1;
     std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
-    for (auto &key : characters) {
-      std::cout << YELLOW << indexNum << "." << RESETCOLOUR << BLUE << key.name << RESETCOLOUR << "\n";
-      indexNum++;
+    for (unsigned int indexNum = 0U; indexNum < characters.size(); indexNum++) {
+      std::cout << YELLOW << indexNum + 1 << ". " << RESETCOLOUR << BLUE << characters[indexNum].name << RESETCOLOUR << "\n";
     }
     std::cin >> classChoice;
   }
