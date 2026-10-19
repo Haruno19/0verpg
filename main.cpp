@@ -182,10 +182,10 @@ int main(int argc, char *argv[]) {
   hero.xp = 0;
   // Armours
   std::vector<Armour> armours = {
-    {trim(CONF["armour1"]), 5},
-    {trim(CONF["armour2"]), 10},
-    {trim(CONF["armour3"]), 15},
-    {trim(CONF["armour4"]), 20}
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour1"]) : trim(CONF["armour1"]), 5},
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour2"]) : trim(CONF["armour2"]), 10},
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour3"]) : trim(CONF["armour3"]), 15},
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour4"]) : trim(CONF["armour4"]), 20}
   };
   // Weapons
   std::vector<Weapon> weapons = {

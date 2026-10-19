@@ -112,7 +112,11 @@
         "mageWeapon1": "Arcane Whisper",
         "mageWeapon2": "Voidfang Wand",
         "mageWeapon3": "Celestial Scepter",
-        "mageWeapon4": "Emberstorm Rod"
+        "mageWeapon4": "Emberstorm Rod",
+        "mageArmour1": "Mystic Robes",
+        "mageArmour2": "Arcane Vestments",
+        "mageArmour3": "Astral Weave Mantle",
+        "mageArmour4": "Eternal Sorcerer Armor"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -227,6 +231,10 @@
         "mageWeapon1": "Мистичен шепот",
         "mageWeapon2": "Жезъл Зъб на Пустотата",
         "mageWeapon3": "Небесен скиптър",
-        "mageWeapon4": "Жезъл Буря от жар"
+        "mageWeapon4": "Жезъл Буря от жар",
+        "mageArmour1": "Мистични Одежди",
+        "mageArmour2": "Магически Одежди",
+        "mageArmour3": "Мантия от Астрална Тъкан",
+        "mageArmour4": "Доспехи на Вечния Магьосник"
     }
 }
