@@ -150,7 +150,6 @@ int main(int argc, char *argv[]) {
   cfg.close();
   setupKeys();
   int classChoice = 0;
-  int indexNum = 1;
   // All of the available character classes
   std::vector<Character> characters = {
     {trim(CONF["warrior"]), 60, 5, 5},
@@ -159,6 +158,7 @@ int main(int argc, char *argv[]) {
     {trim(CONF["paladin"]), 75, 6, 2}
   };
   while (classChoice < 1 || classChoice > 4) {
+    int indexNum = 1;
     std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
     for (auto &key : characters) {
       std::cout << YELLOW << indexNum << "." << RESETCOLOUR << BLUE << key.name << RESETCOLOUR << "\n";
