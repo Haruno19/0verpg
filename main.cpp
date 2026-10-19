@@ -244,7 +244,6 @@ int main(int argc, char *argv[]) {
     hero.y = 0;
     visited[0][0] = true;
     bool floorCleared = false;
-    std::cout << hero.name << std::endl;
     weaponShop(hero, (hero.name == "Mage" || hero.name == "Магьосник") ? mageWeapons : weapons);
     potionShop(hero, potionsList);
     std::cout << YELLOW << "\n🏰 " << trim(CONF["floor"]) << " " << floor << " " << trim(CONF["begins"]) << RESETCOLOUR << "\n";
