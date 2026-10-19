@@ -89,6 +89,14 @@ struct Hero {
   int level;
 };
 
+// All of the available characters/heros
+struct Character {
+  std::string name;
+  int health;
+  int baseDefense;
+  int baseAttack;
+};
+
 int keys[7];
 std::string configHome = (std::getenv("HOME") ? std::string(std::getenv("HOME")) + std::string("/") : std::string("./")) + ".0verpg.json";
 std::string userLang = "en";
@@ -141,12 +149,26 @@ int main(int argc, char *argv[]) {
   cfg >> config;
   cfg.close();
   setupKeys();
+  int classChoice;
+  std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
+  std::cout << YELLOW << "1." << RESETCOLOUR << BLUE << trim(CONF["warrior"]) << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "2." << RESETCOLOUR << BLUE << trim(CONF["mage"]) << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "3." << RESETCOLOUR << BLUE << trim(CONF["rogue"]) << RESETCOLOUR << "\n";
+  std::cout << YELLOW << "4." << RESETCOLOUR << BLUE << trim(CONF["paladin"]) << RESETCOLOUR << "\n";
+  std::cin >> classChoice;
+  if (classChoice - 1 > 3 || classChoice - 1 <= 0) { classChoice = 0; }
   Hero hero;
-  std::cout << trim(CONF["enterheroname"]);
-  std::getline(std::cin, hero.name);
-  hero.health = 100;
-  hero.baseDefense = 5;
-  hero.baseAttack = 5;
+  // All of the available character classes
+  std::vector<Character> characters = {
+    {trim(CONF["warrior"]), 60, 5, 5},
+    {trim(CONF["mage"]), 90, 10, 1},
+    {trim(CONF["rogue"]), 70, 7, 3},
+    {trim(CONF["paladin"]), 75, 6, 2}
+  };
+  hero.name = characters[classChoice - 1].name;
+  hero.health = characters[classChoice - 1].health;
+  hero.baseDefense = characters[classChoice - 1].baseDefense;
+  hero.baseAttack = characters[classChoice - 1].baseAttack;
   hero.equippedArmour = {trim(CONF["none"]), 0};
   hero.equippedWeapon = {trim(CONF["fists"]), 0, 0};
   hero.gold = 50;
@@ -200,7 +222,7 @@ int main(int argc, char *argv[]) {
     hero.equippedArmour = armours[choice-1];
     hero.inventoryArmours.emplace_back(armours[choice-1]);
   }
-  std::cout << CYAN << hero.name << RESETCOLOUR <<" equipped " << BLUE << hero.equippedArmour.name << " (" << trim(CONF["defense"]) << " +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedArmour.name << " (" << trim(CONF["defense"]) << " +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";
   int floors = 3;      // Number of dungeon floors
   int mapSize = 5;     // Map size (square grid)
   for (int floor = 1; floor <= floors; ++floor) {

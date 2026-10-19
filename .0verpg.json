@@ -45,7 +45,7 @@
         "restsAndRecoversTo": "rests and recovers to",
         "win": "Congratulations! You defeated all bosses and cleared the dungeon!",
         "invalidArmourIndex": "Invalid armour index",
-        "equipped": "equipped",
+        "equipped": "equipped with",
         "invalidWeaponIndex": "Invalid weapon index",
         "battle": "Battle",
         "criticalHit": "CRITICAL HIT",
@@ -102,8 +102,12 @@
         "left": ", LEFT",
         "up": ", UP",
         "down": ", DOWN",
-        "consumeApotion": ", and Consume a Potion"
-
+        "consumeApotion": ", and Consume a Potion",
+        "chooseClass": "Choose character Class",
+        "warrior": "Warrior",
+        "mage": "Mage",
+        "rogue": "Rogue",
+        "paladin": "Paladin"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -151,7 +155,7 @@
         "restsAndRecoversTo": "почина си и се възстанови до",
         "win": "Поздравления! Ти разгроми всички животни и босове на всички тези нива!",
         "invalidArmourIndex": "Невалиден избор на броня",
-        "equipped": "екипиран",
+        "equipped": "екипиран със",
         "invalidWeaponIndex": "Невалиден избор на оръжие",
         "battle": "Битка",
         "criticalHit": "КРИТИЧЕН УДАР",
@@ -208,6 +212,11 @@
         "left": ", НА ЛЯВО",
         "up": ", НА ГОРЕ",
         "down": ", НА ДОЛУ",
-        "consumeApotion": ", и Изпий Колбичка с Кръв"
+        "consumeApotion": ", и Изпий Колбичка с Кръв",
+        "chooseClass": "Избери клас на героя",
+        "warrior": "Войн",
+        "mage": "Магьосник",
+        "rogue": "Дивак",
+        "paladin": "Паладин"
     }
 }
