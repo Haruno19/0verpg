@@ -189,18 +189,11 @@ int main(int argc, char *argv[]) {
   };
   // Weapons
   std::vector<Weapon> weapons = {
-    {trim(CONF["weapon1"]), 5, 20},
-    {trim(CONF["weapon2"]), 10, 40},
-    {trim(CONF["weapon3"]), 15, 60},
-    {trim(CONF["weapon4"]), 25, 100}
-    };
-  // Mage Weapons
-  std::vector<Weapon> mageWeapons = {
-    {trim(CONF["mageWeapon1"]), 5, 20},
-    {trim(CONF["mageWeapon2"]), 10, 40},
-    {trim(CONF["mageWeapon3"]), 15, 60},
-    {trim(CONF["mageWeapon4"]), 25, 100}
-    };
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon1"]) : trim(CONF["weapon1"]), 5, 20},
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon2"]) : trim(CONF["weapon2"]), 10, 40},
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon3"]) : trim(CONF["weapon3"]), 15, 60},
+    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon4"]) : trim(CONF["weapon4"]), 25, 100}
+  };
   // Potions
   std::vector<Potion> potionsList = {
     {trim(CONF["potion1"]), 20, 15},
@@ -244,7 +237,7 @@ int main(int argc, char *argv[]) {
     hero.y = 0;
     visited[0][0] = true;
     bool floorCleared = false;
-    weaponShop(hero, (hero.name == "Mage" || hero.name == "Магьосник") ? mageWeapons : weapons);
+    weaponShop(hero, weapons);
     potionShop(hero, potionsList);
     std::cout << YELLOW << "\n🏰 " << trim(CONF["floor"]) << " " << floor << " " << trim(CONF["begins"]) << RESETCOLOUR << "\n";
     while (!floorCleared && hero.health > 0) {
@@ -298,7 +291,7 @@ int main(int argc, char *argv[]) {
       hero.y = newY;
       visited[hero.x][hero.y] = true;
       // Explore the room
-      if (!exploreRoom(hero, enemies, armours, (hero.name == "Mage" || hero.name == "Магьосник") ? mageWeapons : weapons, dungeon[hero.x][hero.y], potionsList)) { std::cout << RED << "\n💀 " << trim(CONF["gameOver"]) << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
+      if (!exploreRoom(hero, enemies, armours, weapons, dungeon[hero.x][hero.y], potionsList)) { std::cout << RED << "\n💀 " << trim(CONF["gameOver"]) << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       // Check if boss defeated
       bool bossAlive = false;
       for (int i = 0; i < mapSize; ++i) {
