@@ -108,7 +108,11 @@
         "mage": "Mage",
         "rogue": "Rogue",
         "paladin": "Paladin",
-        "classChosen": "Chosen class"
+        "classChosen": "Chosen class",
+        "mageWeapon1": "Arcane Whisper",
+        "mageWeapon2": "Voidfang Wand",
+        "mageWeapon3": "Celestial Scepter",
+        "mageWeapon4": "Emberstorm Rod"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -219,6 +223,10 @@
         "mage": "Магьосник",
         "rogue": "Дивак",
         "paladin": "Паладин",
-        "classChosen": "Избран клас"
+        "classChosen": "Избран клас",
+        "mageWeapon1": "Мистичен шепот",
+        "mageWeapon2": "Жезъл Зъб на Пустотата",
+        "mageWeapon3": "Небесен скиптър",
+        "mageWeapon4": "Жезъл Буря от жар"
     }
 }
