@@ -132,7 +132,8 @@
         "paladinArmour1": "Templar Plate",
         "paladinArmour2": "Radiant Aegis",
         "paladinArmour3": "Crusader's Bulwark",
-        "paladinArmour4": "Divine Guardian Plate"
+        "paladinArmour4": "Divine Guardian Plate",
+        "healingFountain": "Found a healing fountain, healing to"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -267,6 +268,7 @@
         "paladinArmour1": "Рицарска плочеста броня",
         "paladinArmour2": "Сияен щит",
         "paladinArmour3": "Защита на кръстоносеца",
-        "paladinArmour4": "Плочеста броня на божествения пазител"
+        "paladinArmour4": "Плочеста броня на божествения пазител",
+        "healingFountain": "Намерен е фонтан с кръв, добавям кръв"
     }
 }
