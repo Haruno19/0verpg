@@ -116,7 +116,23 @@
         "mageArmour1": "Mystic Robes",
         "mageArmour2": "Arcane Vestments",
         "mageArmour3": "Astral Weave Mantle",
-        "mageArmour4": "Eternal Sorcerer Armor"
+        "mageArmour4": "Eternal Sorcerer Armor",
+        "rogueWeapon1": "Phantom Cloakmail",
+        "rogueWeapon2": "Silent Fang",
+        "rogueWeapon3": "Nightpiercer",
+        "rogueWeapon4": "Phantom Blade",
+        "rogueArmour1": "Shadow Leather",
+        "rogueArmour2": "Nightstalker Garb",
+        "rogueArmour3": "Silentfang Armor",
+        "rogueArmour4": "Phantom Cloakmail",
+        "paladinWeapon1": "Lightbringer",
+        "paladinWeapon2": "Hammer of Valor",
+        "paladinWeapon3": "Dawnstrike",
+        "paladinWeapon4": "Judgment's Edge",
+        "paladinArmour1": "Templar Plate",
+        "paladinArmour2": "Radiant Aegis",
+        "paladinArmour3": "Crusader's Bulwark",
+        "paladinArmour4": "Divine Guardian Plate"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -235,6 +251,22 @@
         "mageArmour1": "Мистични Одежди",
         "mageArmour2": "Магически Одежди",
         "mageArmour3": "Мантия от Астрална Тъкан",
-        "mageArmour4": "Доспехи на Вечния Магьосник"
+        "mageArmour4": "Доспехи на Вечния Магьосник",
+        "rogueWeapon1": "Призрачна броня-наметка",
+        "rogueWeapon2": "Тиха отрова",
+        "rogueWeapon3": "Нощен пронизвач",
+        "rogueWeapon4": "Призрачно острие",
+        "rogueArmour1": "Сенчеста кожа",
+        "rogueArmour2": "Облекло на нощния ловец",
+        "rogueArmour3": "Броня Тиха отрова",
+        "rogueArmour4": "Призрачна броня-наметка",
+        "paladinWeapon1": "Носител на светлинатаr",
+        "paladinWeapon2": "Чук на доблестта",
+        "paladinWeapon3": "Удар на зората",
+        "paladinWeapon4": "Острие на възмездието",
+        "paladinArmour1": "Рицарска плочеста броня",
+        "paladinArmour2": "Сияен щит",
+        "paladinArmour3": "Защита на кръстоносеца",
+        "paladinArmour4": "Плочеста броня на божествения пазител"
     }
 }

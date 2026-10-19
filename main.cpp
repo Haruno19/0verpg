@@ -180,20 +180,41 @@ int main(int argc, char *argv[]) {
   hero.y = 0;
   hero.level = 1;
   hero.xp = 0;
-  // Armours
-  std::vector<Armour> armours = {
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour1"]) : trim(CONF["armour1"]), 5},
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour2"]) : trim(CONF["armour2"]), 10},
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour3"]) : trim(CONF["armour3"]), 15},
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour4"]) : trim(CONF["armour4"]), 20}
-  };
-  // Weapons
-  std::vector<Weapon> weapons = {
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon1"]) : trim(CONF["weapon1"]), 5, 20},
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon2"]) : trim(CONF["weapon2"]), 10, 40},
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon3"]) : trim(CONF["weapon3"]), 15, 60},
-    {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon4"]) : trim(CONF["weapon4"]), 25, 100}
-  };
+  std::vector<Armour> armours;
+  std::vector<Weapon> weapons;
+  // Warrior, Mage Armours and Weapons
+  if (hero.name == "Mage" || hero.name == "Магьосник" || hero.name == "Warrior" || hero.name == "Войн") {
+    // Armours
+    armours = {
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour1"]) : trim(CONF["armour1"]), 5},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour2"]) : trim(CONF["armour2"]), 10},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour3"]) : trim(CONF["armour3"]), 15},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour4"]) : trim(CONF["armour4"]), 20}
+    };
+    // Weapons
+    weapons = {
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon1"]) : trim(CONF["weapon1"]), 5, 20},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon2"]) : trim(CONF["weapon2"]), 10, 40},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon3"]) : trim(CONF["weapon3"]), 15, 60},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon4"]) : trim(CONF["weapon4"]), 25, 100}
+    };
+  }
+  else {
+      // Rogue,Paladin Armours
+    armours = {
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour1"]) : trim(CONF["paladinArmour1"]), 5},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour2"]) : trim(CONF["paladinArmour2"]), 10},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour3"]) : trim(CONF["paladinArmour3"]), 15},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour4"]) : trim(CONF["paladinArmour4"]), 20}
+    };
+    // Rogue,Paladin Weapons
+    weapons = {
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon1"]) : trim(CONF["paladinWeapon1"]), 5, 20},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon2"]) : trim(CONF["paladinWeapon2"]), 10, 40},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon3"]) : trim(CONF["paladinWeapon3"]), 15, 60},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon4"]) : trim(CONF["paladinWeapon4"]), 25, 100}
+    };
+  }
   // Potions
   std::vector<Potion> potionsList = {
     {trim(CONF["potion1"]), 20, 15},
