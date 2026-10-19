@@ -87,6 +87,7 @@ struct Hero {
   int x, y;
   int xp;
   int level;
+  int maxHP;
 };
 
 // All of the available characters/heros
@@ -169,6 +170,7 @@ int main(int argc, char *argv[]) {
   Hero hero;
   hero.name = characters[classChoice].name;
   hero.health = characters[classChoice].health;
+  hero.maxHP = hero.health;
   hero.baseDefense = characters[classChoice].baseDefense;
   hero.baseAttack = characters[classChoice].baseAttack;
   hero.equippedArmour = {trim(CONF["none"]), 0};
@@ -302,7 +304,7 @@ int main(int argc, char *argv[]) {
         floorCleared = true;
         // Heal hero slightly after round
         hero.health += 15;
-        if (hero.health > 100) hero.health = 100;
+        if (hero.health > hero.maxHP) hero.health = hero.maxHP;
         std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["restsAndRecoversTo"]) << " " << GREEN << hero.health << RESETCOLOUR << " " << trim(CONF["hp"]) << "." << "\n";
       }
     }
@@ -385,7 +387,7 @@ void usePotion(Hero &hero) {
   if (hero.inventoryPotions.size() > 0) {
     Potion p = hero.inventoryPotions.back();
     hero.health += p.healAmount;
-    if (hero.health > 100) { hero.health = 100; }
+    if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
     std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << RESETCOLOUR << "\n";
     hero.inventoryPotions.pop_back();
   } else {
@@ -564,7 +566,7 @@ void gainXP(Hero &hero, int amount) {
   if (hero.xp >= hero.level * 50) { // Level up threshold
     hero.level++;
     hero.health += 20;
-    if (hero.health > 100) { hero.health = 100; }
+    if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
     hero.baseAttack += 5;
     hero.xp = 0; // reset XP after level up
     std::cout << GREEN << "*** " << trim(CONF["levelUP"]) << "! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["isNowLevel"]) << " " << hero.level << RESETCOLOUR << "!\n";
