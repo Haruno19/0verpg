@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
     {trim(CONF["rogue"]), 70, 7, 3},
     {trim(CONF["paladin"]), 75, 6, 2}
   };
-  while (classChoice < 1 || classChoice > 4) {
+  while (classChoice < 1 || classChoice > characters.size()) {
     int indexNum = 1;
     std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
     for (auto &key : characters) {
