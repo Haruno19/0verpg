@@ -39,7 +39,7 @@ In [Visual Studio Code Editor](https://code.visualstudio.com/download), go to **
         "command": "C:\\MingW\\bin\\g++.exe",
         "args": [
             "-fdiagnostics-color=always",
-            "-std=c++17",
+            "-std=c++20",
             "-ggdb",
             "-lpthread",
             "-Wall",
