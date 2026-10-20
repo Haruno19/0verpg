@@ -206,62 +206,62 @@ int main(int argc, char *argv[]) {
   if (hero.name == "Mage" || hero.name == "Магьосник" || hero.name == "Warrior" || hero.name == "Войн") {
     // Armours Warrior, Mage
     armours = {
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour1"]) : trim(CONF["armour1"]), 5},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour2"]) : trim(CONF["armour2"]), 10},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour3"]) : trim(CONF["armour3"]), 15},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour4"]) : trim(CONF["armour4"]), 20}
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour1"]) : trim(CONF["armour1"]), .defense = 5},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour2"]) : trim(CONF["armour2"]), .defense = 10},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour3"]) : trim(CONF["armour3"]), .defense = 15},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour4"]) : trim(CONF["armour4"]), .defense = 20}
     };
     // Weapons Warrior, Mage
     weapons = {
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon1"]) : trim(CONF["weapon1"]), 5, 20},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon2"]) : trim(CONF["weapon2"]), 10, 40},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon3"]) : trim(CONF["weapon3"]), 15, 60},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon4"]) : trim(CONF["weapon4"]), 25, 100}
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon1"]) : trim(CONF["weapon1"]), .attack = 5, .cost = 20},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon2"]) : trim(CONF["weapon2"]), .attack = 10, .cost = 40},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon3"]) : trim(CONF["weapon3"]), .attack = 15, .cost = 60},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon4"]) : trim(CONF["weapon4"]), .attack = 25, .cost = 100}
     };
     // Spells Warrior, Mage
     spells = {
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell1"]) : trim(CONF["warriorSpell1"]), 5, 0},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell2"]) : trim(CONF["warriorSpell2"]), 10, 10},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell3"]) : trim(CONF["warriorSpell3"]), 15, 15},
-      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell4"]) : trim(CONF["warriorSpell4"]), 25, 20}
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell1"]) : trim(CONF["warriorSpell1"]), .attack = 5, .manaCost = 0},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell2"]) : trim(CONF["warriorSpell2"]), .attack = 10, .manaCost = 10},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell3"]) : trim(CONF["warriorSpell3"]), .attack = 15, .manaCost = 15},
+      {.name = (hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell4"]) : trim(CONF["warriorSpell4"]), .attack = 25, .manaCost = 20}
     };
   }
   else {
       // Rogue, Paladin Armours
     armours = {
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour1"]) : trim(CONF["paladinArmour1"]), 5},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour2"]) : trim(CONF["paladinArmour2"]), 10},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour3"]) : trim(CONF["paladinArmour3"]), 15},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour4"]) : trim(CONF["paladinArmour4"]), 20}
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour1"]) : trim(CONF["paladinArmour1"]), .defense = 5},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour2"]) : trim(CONF["paladinArmour2"]), .defense = 10},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour3"]) : trim(CONF["paladinArmour3"]), .defense = 15},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour4"]) : trim(CONF["paladinArmour4"]), .defense = 20}
     };
     // Rogue, Paladin Weapons
     weapons = {
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon1"]) : trim(CONF["paladinWeapon1"]), 5, 20},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon2"]) : trim(CONF["paladinWeapon2"]), 10, 40},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon3"]) : trim(CONF["paladinWeapon3"]), 15, 60},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon4"]) : trim(CONF["paladinWeapon4"]), 25, 100}
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon1"]) : trim(CONF["paladinWeapon1"]), .attack = 5, .cost = 20},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon2"]) : trim(CONF["paladinWeapon2"]), .attack = 10, .cost = 40},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon3"]) : trim(CONF["paladinWeapon3"]), .attack = 15, .cost = 60},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon4"]) : trim(CONF["paladinWeapon4"]), .attack = 25, .cost = 100}
     };
     // Spells Rogue, Paladin
     spells = {
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell1"]) : trim(CONF["paladinSpell1"]), 5, 0},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell2"]) : trim(CONF["paladinSpell2"]), 10, 10},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell3"]) : trim(CONF["paladinSpell3"]), 15, 15},
-      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell4"]) : trim(CONF["paladinSpell4"]), 25, 20}
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell1"]) : trim(CONF["paladinSpell1"]), .attack = 5, .manaCost = 0},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell2"]) : trim(CONF["paladinSpell2"]), .attack = 10, .manaCost = 10},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell3"]) : trim(CONF["paladinSpell3"]), .attack = 15, .manaCost = 15},
+      {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell4"]) : trim(CONF["paladinSpell4"]), .attack = 25, .manaCost = 20}
     };
   }
   // Establish default and starting spell
   hero.inventorySpells.emplace_back(spells[0]);
   // Potions
   std::vector<Potion> potionsList = {
-    {trim(CONF["potion1"]), 20, 15},
-    {trim(CONF["potion2"]), 40, 30},
-    {trim(CONF["potion3"]), 60, 45}
+    {.name = trim(CONF["potion1"]), .healAmount = 20, .cost = 15},
+    {.name = trim(CONF["potion2"]), .healAmount = 40, .cost = 30},
+    {.name = trim(CONF["potion3"]), .healAmount = 60, .cost = 45}
   };
   // per level enemies
   std::vector<Enemy> enemies = {
-    {trim(CONF["enemy1"]), 8, 30, 20},
-    {trim(CONF["enemy2"]), 12, 40, 30},
-    {trim(CONF["enemy3"]), 15, 50, 40}
+    {.name = trim(CONF["enemy1"]), .attack = 8, .health = 30, .xpReward = 20},
+    {.name = trim(CONF["enemy2"]), .attack = 12, .health = 40, .xpReward = 30},
+    {.name = trim(CONF["enemy3"]), .attack = 15, .health = 50, .xpReward = 40}
   };
   // Inventory weapons/armours colours for their names
   const char *coloursArr[] = { BLUE, MAGENTA, GREEN, RED, YELLOW, CYAN };
@@ -407,7 +407,7 @@ void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index) {
 void equipSpell(Hero &hero, int index) {
   if (index < 0 || index >= (int)hero.inventorySpells.size()) { std::cout << trim(CONF["invalidSpellIndex"]) << ".\n"; return; }
   hero.equippedSpell = hero.inventorySpells[index];
-  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedSpell.name << " (" << trim(CONF["attack"]) << "+" << RESETCOLOUR << YELLOW << hero.inventorySpells[index].attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedSpell.name << RESETCOLOUR << " (" << MAGENTA << trim(CONF["attack"]) << "+" << RESETCOLOUR << YELLOW << hero.inventorySpells[index].attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << RESETCOLOUR << ")" << "\n";
 }
 
 // Battle simulation
@@ -522,15 +522,15 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &a
     cell = '.';
     return true;
   } else if (cell == 'B') {
-    Enemy boss = {trim(CONF["dungeonBoss"]), 25, 80, 50};
+    Enemy boss = {.name = trim(CONF["dungeonBoss"]), .attack = 25, .health = 80, .xpReward = 50};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'G') {
-    Enemy boss = {trim(CONF["arenaBoss"]), 26, 85, 60};
+    Enemy boss = {.name = trim(CONF["arenaBoss"]), .attack = 26, .health = 85, .xpReward = 60};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'Z') {
-    Enemy boss = {trim(CONF["tarkanBoss"]), 27, 90, 70};
+    Enemy boss = {.name = trim(CONF["tarkanBoss"]), .attack = 27, .health = 90, .xpReward = 70};
     cell = '.';
     return battle(hero, boss);
   } else if (cell == 'T') {
