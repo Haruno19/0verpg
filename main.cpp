@@ -470,6 +470,7 @@ bool battle(Hero &hero, Enemy enemy) {
       << std::max(0, hero.companion.health) << trim(CONF["hp"]) << RESETCOLOUR << "\n";
     // Auto-use potion if low HP
     if (hero.health <= 30 && hero.inventoryPotions.size() > 0) { std::cout << CYAN << "⚠ " << trim(CONF["autoUsingPotion"]) << "..." << RESETCOLOUR << "\n"; usePotion(hero); }
+    if (hero.companion.health <= 0) { std::cout << RED <<trim(CONF["companion"]) << " " << trim(CONF["hasFallen"]) << "..." << RESETCOLOUR << "\n"; }
     if (hero.health <= 0) { std::cout << RED << hero.name << " " << trim(CONF["hasFallen"]) << "..." << RESETCOLOUR << "\n"; return false; }
   }
   return false;
@@ -503,14 +504,16 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
 // Use potion
 void usePotion(Hero &hero) {
   if (hero.inventoryPotions.size() > 0) {
+    if (hero.companion.health <= 0) { hero.companion.health = 0; std::cout << GREEN << trim(CONF["resurrectCompanion"]) << RESETCOLOUR << "\n"; }
     if (hero.mana + 30 >= hero.maxMana) { hero.mana = hero.maxMana; } else { hero.mana += 30; }
     Potion p = hero.inventoryPotions.back();
     hero.health += p.healAmount;
     hero.companion.health += p.healAmount;
     if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
     if (hero.companion.health > hero.companion.maxHP) { hero.companion.health = hero.companion.maxHP; }
-    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << trim(CONF["companionHeal"]) << " " << hero.companion.health << RESETCOLOUR
-     << " " << trim(CONF["addedMana"]) << ": " << BLUE << hero.mana << " " << trim(CONF["mana"]) << RESETCOLOUR << "\n";
+    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health
+      << RESETCOLOUR << " " << CYAN << trim(CONF["companionHeal"]) << " " << hero.companion.health << RESETCOLOUR
+      << " " << trim(CONF["addedMana"]) << ": " << BLUE << hero.mana << " " << trim(CONF["mana"]) << RESETCOLOUR << "\n";
     hero.inventoryPotions.pop_back();
   } else {
     std::cout << RED << trim(CONF["noPotionsAvailable"]) << "!" << RESETCOLOUR << "\n";

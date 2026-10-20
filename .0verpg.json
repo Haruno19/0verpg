@@ -176,7 +176,8 @@
         "companionHeal": "Pet healing to",
         "companionAttacksFor": "Pet attacks with",
         "companionTookDamage": "The pet was attacked with",
-        "companionHasHPleft": "The pet has HP left:"
+        "companionHasHPleft": "The pet has HP left:",
+        "resurrectCompanion": "Resurrect the pet completes"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -354,6 +355,7 @@
         "companionHeal": "Кученцето изпи кръв и има",
         "companionAttacksFor": "Кучето атакува с",
         "companionTookDamage": "Кучето беше атакувано с",
-        "companionHasHPleft": "Кучето има оставаща кръв"
+        "companionHasHPleft": "Кучето има оставаща кръв",
+        "resurrectCompanion": "Възкресявам кучето"
     }
 }
