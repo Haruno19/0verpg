@@ -418,7 +418,7 @@ bool battle(Hero &hero, Enemy enemy) {
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack + hero.equippedSpell.attack;
     if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << trim(CONF["criticalHit"]) << "!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
-    if (hero.mana - 10 <= 0) { hero.mana = 0; } else { hero.mana -= 10 - hero.equippedSpell.manaCost; }
+    if (hero.mana - 10 <= 0) { hero.mana = 0; } else { hero.mana -= 10 - hero.equippedSpell.manaCost; hero.weaponAttackDecreased = 0; }
     if (hero.mana == 0 && hero.weaponAttackDecreased == 0) { hero.equippedWeapon.attack -= 3; hero.weaponAttackDecreased = 1; }
     std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! "
       << GREEN << (hero.mana > 0 ? trim(CONF["manaUsed"]) : trim(CONF["noManaUsed"])) << RESETCOLOUR << " | " << enemy.name << " " << trim(CONF["hp"]) << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
@@ -477,7 +477,7 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
 // Use potion
 void usePotion(Hero &hero) {
   if (hero.inventoryPotions.size() > 0) {
-    if (hero.mana + 30 > hero.maxMana) { hero.mana = hero.maxMana; } else { hero.mana += 30; }
+    if (hero.mana + 30 >= hero.maxMana) { hero.mana = hero.maxMana; } else { hero.mana += 30; }
     Potion p = hero.inventoryPotions.back();
     hero.health += p.healAmount;
     if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
