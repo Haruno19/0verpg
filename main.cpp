@@ -71,7 +71,7 @@ struct Enemy {
   int xpReward;
 };
 
-// Potion structure
+// Spell structure
 struct Spell {
   std::string name;
   int attack;
