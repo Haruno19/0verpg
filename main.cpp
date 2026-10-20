@@ -308,7 +308,8 @@ int main(int argc, char *argv[]) {
         << " 👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["level"]) << ": " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " " << trim(CONF["xp"]) << RESETCOLOUR << "\n";
       std::cout << YELLOW << trim(CONF["move"]) <<  " (" << wKey << "/" <<  dKey << "/" <<  aKey << "/" <<  sKey << "), " <<  potionKey << " " << trim(CONF["usePotion"]) << ", "
-        <<  armourKey << " " << trim(CONF["toChangeArmour"]) << ", " <<  weaponKey << " " << trim(CONF["toChangeWeapon"]) << ", Q " << trim(CONF["toQuit"]) << ": " << RESETCOLOUR << std::endl;
+        <<  armourKey << " " << trim(CONF["toChangeArmour"]) << ", " <<  weaponKey << " " << trim(CONF["toChangeWeapon"])
+        << ", " <<  spellKey << " " << trim(CONF["toChangeSpell"]) << ", Q " << trim(CONF["toQuit"]) << ": " << RESETCOLOUR << std::endl;
       //std::cin >> move;
       char move = std::tolower(static_cast<unsigned char>(readKey()));
       if (move == 'q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
@@ -340,7 +341,7 @@ int main(int argc, char *argv[]) {
         continue;
       }
       if (move == spellKey) {
-        std::cout << MAGENTA << trim(CONF["curEquippedSpell"]) << ": " << RESETCOLOUR << GREEN << hero.equippedSpell.name << " (+" << trim(CONF["attack"]) << " " << hero.equippedSpell.attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
+        std::cout << MAGENTA << trim(CONF["curEquippedSpell"]) << ": " << RESETCOLOUR << GREEN << hero.equippedSpell.name << " ( +" << trim(CONF["attack"]) << " " << hero.equippedSpell.attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
         std::cout << trim(CONF["inventorySpells"]) << ":\n";
         for (size_t i = 0; i < hero.inventorySpells.size(); ++i) {
           std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventorySpells[i].name << RESETCOLOUR

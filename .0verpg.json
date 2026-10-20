@@ -164,7 +164,8 @@
         "chooseSpellNumber": "Choose Spell number",
         "invalidSpellIndex": "Invalid Spell index",
         "basicSpell": "Basic Spell",
-        "spell": "Spell"
+        "spell": "Spell",
+        "toChangeSpell": "to change spell"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -330,6 +331,7 @@
         "inventorySpells": "Раницата на Магиите",
         "chooseSpellNumber": "Избери номер на магията",
         "invalidSpellIndex": "Невалиден избор на Магия",
-        "spell": "Магия"
+        "spell": "Магия",
+        "toChangeSpell": "за да смениш магия"
     }
 }
