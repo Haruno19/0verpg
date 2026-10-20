@@ -171,7 +171,12 @@
         "currentlyEquippedWeapon": "Currently equppied to the hero",
         "goodWeapon": "Good Weapon",
         "currentlyEquippedArmour": "Currently equppied to the hero",
-        "goodArmour": "Good Armour"
+        "goodArmour": "Good Armour",
+        "companion": "Wolf",
+        "companionHeal": "Pet healing to",
+        "companionAttacksFor": "Pet attacks with",
+        "companionTookDamage": "The pet was attacked with",
+        "companionHasHPleft": "The pet has HP left:"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -344,6 +349,11 @@
         "currentlyEquippedWeapon": "Героя вече използва това оръжие",
         "goodWeapon": "Добро оръжие",
         "currentlyEquippedArmour": "Героя вече използва тази броня",
-        "goodArmour": "Добра броня"
+        "goodArmour": "Добра броня",
+        "companion": "Вълк",
+        "companionHeal": "Кученцето изпи кръв и има",
+        "companionAttacksFor": "Кучето атакува с",
+        "companionTookDamage": "Кучето беше атакувано с",
+        "companionHasHPleft": "Кучето има оставаща кръв"
     }
 }

@@ -78,6 +78,14 @@ struct Spell {
   int manaCost;
 };
 
+// Companion structure
+struct Companion {
+  std::string name;
+  int attack;
+  int health;
+  int maxHP;
+};
+
 // Hero structure
 struct Hero {
   std::string name;
@@ -89,6 +97,7 @@ struct Hero {
   Armour equippedArmour;
   Weapon equippedWeapon;
   Spell equippedSpell;
+  Companion companion;
   std::vector<Armour> inventoryArmours;
   std::vector<Weapon> inventoryWeapons;
   std::vector<Potion> inventoryPotions;
@@ -169,10 +178,10 @@ int main(int argc, char *argv[]) {
   int classChoice = 0;
   // All of the available character classes
   std::vector<Character> characters = {
-    {.name=trim(CONF["warrior"]), .health = 60, .baseDefense = 5,  .baseAttack = 5, .mana = 60, .maxMana = 60},
-    {.name=trim(CONF["mage"]),    .health = 90, .baseDefense = 10, .baseAttack = 1, .mana = 90, .maxMana = 90},
-    {.name=trim(CONF["rogue"]),   .health = 70, .baseDefense = 7,  .baseAttack = 3, .mana = 70, .maxMana = 70},
-    {.name=trim(CONF["paladin"]), .health = 75, .baseDefense = 6,  .baseAttack = 2, .mana = 75, .maxMana = 75}
+    {.name = trim(CONF["warrior"]), .health = 60, .baseDefense = 5,  .baseAttack = 5, .mana = 60, .maxMana = 60},
+    {.name = trim(CONF["mage"]),    .health = 90, .baseDefense = 10, .baseAttack = 1, .mana = 90, .maxMana = 90},
+    {.name = trim(CONF["rogue"]),   .health = 70, .baseDefense = 7,  .baseAttack = 3, .mana = 70, .maxMana = 70},
+    {.name = trim(CONF["paladin"]), .health = 75, .baseDefense = 6,  .baseAttack = 2, .mana = 75, .maxMana = 75}
   };
   while (classChoice < 1 || classChoice > characters.size()) {
     std::cout << GREEN << trim(CONF["chooseClass"]) << RESETCOLOUR << ":\n";
@@ -195,6 +204,7 @@ int main(int argc, char *argv[]) {
   hero.equippedArmour = {.name = trim(CONF["none"]), .defense = 0};
   hero.equippedWeapon = {.name = trim(CONF["fists"]), .attack = 0, .cost = 0};
   hero.equippedSpell = {.name = trim(CONF["basicSpell"]), .attack = 0, .manaCost = 0};
+  hero.companion = {.name = trim(CONF["companion"]), .attack = 2, .health = 100, .maxHP = 100};
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
@@ -309,7 +319,8 @@ int main(int argc, char *argv[]) {
         << BLUE << "♻️ " << trim(CONF["mana"]) << ": " << hero.mana << RESETCOLOUR <<  " | 💀" << CYAN << " " << trim(CONF["attack"]) << ": " << hero.baseAttack + hero.equippedWeapon.attack + hero.equippedSpell.attack << " " << trim(CONF["defense"]) << ": " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
         << " | " << "🪄 " << MAGENTA << trim(CONF["spell"]) << ": " << hero.equippedSpell.name << RESETCOLOUR
         << " 👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["level"]) << ": " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
-        << CYAN << hero.xp << "/" << hero.level * 50 << " " << trim(CONF["xp"]) << RESETCOLOUR << "\n";
+        << CYAN << hero.xp << "/" << hero.level * 50 << " " << trim(CONF["xp"]) << RESETCOLOUR << " | 🐶 " << RED << trim(CONF["companion"])
+        << " " << hero.companion.health << trim(CONF["hp"]) << RESETCOLOUR << "\n";
       std::cout << YELLOW << trim(CONF["move"]) <<  " (" << wKey << "/" <<  dKey << "/" <<  aKey << "/" <<  sKey << "), " <<  potionKey << " " << trim(CONF["usePotion"]) << ", "
         <<  armourKey << " " << trim(CONF["toChangeArmour"]) << ", " <<  weaponKey << " " << trim(CONF["toChangeWeapon"])
         << ", " <<  spellKey << " " << trim(CONF["toChangeSpell"]) << ", Q " << trim(CONF["toQuit"]) << ": " << RESETCOLOUR << std::endl;
@@ -425,10 +436,13 @@ bool battle(Hero &hero, Enemy enemy) {
     int heroAttack = hero.baseAttack + hero.equippedWeapon.attack + hero.equippedSpell.attack;
     if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << trim(CONF["criticalHit"]) << "!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
+    enemy.health -= hero.companion.attack;
     if (hero.mana - 10 <= 0) { hero.mana = 0; } else { hero.mana -= 10 - hero.equippedSpell.manaCost; hero.weaponAttackDecreased = 0; }
     if (hero.mana == 0 && hero.weaponAttackDecreased == 0) { hero.equippedWeapon.attack -= 3; hero.weaponAttackDecreased = 1; }
-    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! "
-      << GREEN << (hero.mana > 0 ? trim(CONF["manaUsed"]) : trim(CONF["noManaUsed"])) << RESETCOLOUR << " | " << enemy.name << " " << trim(CONF["hp"]) << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
+    std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR << " " << trim(CONF["damage"]) << "! "
+      << BLUE << trim(CONF["companionAttacksFor"]) << " " << hero.companion.attack << " " << trim(CONF["damage"]) << " " << RESETCOLOUR
+      << GREEN << (hero.mana > 0 ? trim(CONF["manaUsed"]) : trim(CONF["noManaUsed"])) << RESETCOLOUR << " | " << enemy.name << " " << trim(CONF["hp"])
+      << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
     if (enemy.health <= 0) {
       std::cout << MAGENTA << enemy.name << RESETCOLOUR << GREEN << " " << trim(CONF["isDefeated"]) << "!" << RESETCOLOUR << "\n";
       hero.gold += 30;
@@ -448,7 +462,12 @@ bool battle(Hero &hero, Enemy enemy) {
     if (damage < 0) damage = 0;
     if(std::rand() % 100 < 15) { std::cout << MAGENTA << hero.name << RESETCOLOUR << GREEN << " " << trim(CONF["dodged"]) << "!" << RESETCOLOUR << "\n"; damage = 0; }
     hero.health -= damage;
-    std::cout << RED << enemy.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << RED << enemy.attack << RESETCOLOUR << " (" << trim(CONF["blocked"]) << " " << MAGENTA << totalDefense << RESETCOLOUR << ") " << trim(CONF["damageTaken"]) << ": " << YELLOW << damage << RESETCOLOUR << " | " << YELLOW << hero.name << RESETCOLOUR << " " << trim(CONF["hp"]) << ": " << GREEN << std::max(0, hero.health) << RESETCOLOUR << "\n";
+    hero.companion.health -= damage;
+    std::cout << RED << enemy.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << RED << enemy.attack << RESETCOLOUR
+      << " (" << trim(CONF["blocked"]) << " " << MAGENTA << totalDefense << RESETCOLOUR << ") " << trim(CONF["damageTaken"]) << ": " << YELLOW << damage
+      << RESETCOLOUR << RED << " | " << trim(CONF["companion"]) << RESETCOLOUR << ": " << damage << YELLOW << " " << hero.name << RESETCOLOUR
+      << " " << trim(CONF["hp"]) << ": " << GREEN << std::max(0, hero.health) << RESETCOLOUR << " | " << RED << trim(CONF["companion"]) << " "
+      << std::max(0, hero.companion.health) << trim(CONF["hp"]) << RESETCOLOUR << "\n";
     // Auto-use potion if low HP
     if (hero.health <= 30 && hero.inventoryPotions.size() > 0) { std::cout << CYAN << "⚠ " << trim(CONF["autoUsingPotion"]) << "..." << RESETCOLOUR << "\n"; usePotion(hero); }
     if (hero.health <= 0) { std::cout << RED << hero.name << " " << trim(CONF["hasFallen"]) << "..." << RESETCOLOUR << "\n"; return false; }
@@ -487,8 +506,10 @@ void usePotion(Hero &hero) {
     if (hero.mana + 30 >= hero.maxMana) { hero.mana = hero.maxMana; } else { hero.mana += 30; }
     Potion p = hero.inventoryPotions.back();
     hero.health += p.healAmount;
+    hero.companion.health += p.healAmount;
     if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
-    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << RESETCOLOUR
+    if (hero.companion.health > hero.companion.maxHP) { hero.companion.health = hero.companion.maxHP; }
+    std::cout << GREEN << trim(CONF["potionUsed"]) << "!" << RESETCOLOUR << "  +" << p.healAmount << " " << trim(CONF["hpCurrentHP"]) << ": " << MAGENTA << hero.health << trim(CONF["companionHeal"]) << " " << hero.companion.health << RESETCOLOUR
      << " " << trim(CONF["addedMana"]) << ": " << BLUE << hero.mana << " " << trim(CONF["mana"]) << RESETCOLOUR << "\n";
     hero.inventoryPotions.pop_back();
   } else {
@@ -680,12 +701,15 @@ void gainXP(Hero &hero, int amount) {
     hero.level++;
     hero.health += 20;
     hero.mana += 20;
+    hero.companion.health += 20;
     if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
     if (hero.mana > hero.maxMana) { hero.mana = hero.maxMana; }
+    if (hero.companion.health > hero.companion.maxHP) { hero.companion.health = hero.companion.maxHP; }
     hero.baseAttack += 5;
     hero.maxHP += 5;
     hero.maxMana += 5;
     hero.baseDefense += 2;
+    hero.companion.maxHP += 5;
     hero.xp = 0; // reset XP after level up
     std::cout << GREEN << "*** " << trim(CONF["levelUP"]) << "! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["isNowLevel"]) << " " << hero.level << RESETCOLOUR << "!\n";
   }
