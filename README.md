@@ -21,6 +21,28 @@ Now to run the game type `0verpg en` this will use the English version. Currentl
 
 ---
 
+## MacOS users
+
+Thanks to @lasers for the help to make the compile process easier and avoid the header `iostream` not to be found.
+
+Here is what it looked like:
+
+> 5\. ~/src/su8-0verpg on main 
+>     ❯ g++  -o 0verpg main.cpp -g2 -Wall -Wextra -O2 -std=c++20 -D_DEFAULT_SOURCE -pipe -pedantic -Wundef -Wshadow -W -Wwrite-strings -Wcast-align -Wstrict-overflow=5 -Wconversion -Wpointer-arith -Wformat=2 -Wsign-compare -Wendif-label
+>     s -Wredundant-decls -Winit-self
+>     main.cpp:18:10: fatal error: 'iostream' file not found
+>        18 | #include <iostream>
+>           |          ^~~~~~~~~~
+>     1 error generated.
+
+To fix this just type:
+
+```bash
+clang++ -isystem "$(xcrun --show-sdk-path)/usr/include/c++/v1" -std=c++20 -O2 -Wall -Wextra -Wpedantic -Wconversion -Wshadow main.cpp -o 0verpg
+```
+
+---
+
 ## Windows users
 
 Tested with [Visual Studio Code Editor](https://code.visualstudio.com/download), but you need to install [MingW](https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z), once downloaded extract it to **C:\MingW**, then re-open [Visual Studio Code Editor](https://code.visualstudio.com/download), you might want to install C\C++ extensions if you plan to write C\C++ code with the editor. If you plan to contribute to this project go to **File->Preferences->Settings** and type to search for **cppStandard** and set it to c17 to both C++ and C.
