@@ -23,7 +23,7 @@ Now to run the game type `0verpg en` this will use the English version. Currentl
 
 ## MacOS users
 
-Thanks to @lasers for the help to make the compile process easier and avoid the header `iostream` not to be found.
+Thanks to [@lasers](https://github.com/lasers) for the help to make the compile process easier and avoid the header `iostream` not to be found.
 
 Here is what it looked like:
 
