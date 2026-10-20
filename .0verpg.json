@@ -138,7 +138,8 @@
         "manaUsed": "10 mana used",
         "noManaUsed": "No mana used, decreased attacking power",
         "mana": "Mana",
-        "addedMana": "Added 30 Mana"
+        "addedMana": "Added 30 Mana",
+        "manaShrine": "Found a Mana Shrine"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -279,6 +280,7 @@
         "manaUsed": "10 мана използвана",
         "noManaUsed": "Мана не е използвана, намалям атакуващата сила",
         "mana": "Мана",
-        "addedMana": "Добавих 30 Мана"
+        "addedMana": "Добавих 30 Мана",
+        "manaShrine": "Открих Светилище на Мана"
     }
 }

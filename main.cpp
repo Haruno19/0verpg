@@ -488,6 +488,11 @@ bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &a
     hero.health = hero.maxHP;
     cell = '.';
     return true;
+  } else if (cell == 'S') {
+    std::cout << GREEN << trim(CONF["manaShrine"]) << " " << hero.maxMana << " " << trim(CONF["mana"]) << RESETCOLOUR << std::endl;
+    hero.mana = hero.maxMana;
+    cell = '.';
+    return true;
   } else {
     std::cout << "🚪 " << trim(CONF["emptyRoom"]) << ".\n";
     return true;
@@ -567,12 +572,13 @@ std::vector<std::vector<char>> generateMap(int size) {
   std::vector<std::vector<char>> map(size, std::vector<char>(size, '.'));
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
-      int r = std::rand() % 7; // More variety
+      int r = std::rand() % 8; // More variety
       if (r == 0) map[i][j] = 'E'; // Enemy
       else if (r == 1) map[i][j] = 'L'; // Loot
       else if (r == 2) map[i][j] = 'T'; // Trap
       else if (r == 3) map[i][j] = 'C'; // Chest
       else if (r == 4) map[i][j] = 'F'; // healing fountain
+      else if (r == 5) map[i][j] = 'S'; // mana shrine
     }
   }
   // Place bosses in random locations
@@ -609,8 +615,13 @@ void gainXP(Hero &hero, int amount) {
   if (hero.xp >= hero.level * 50) { // Level up threshold
     hero.level++;
     hero.health += 20;
+    hero.mana += 20;
     if (hero.health > hero.maxHP) { hero.health = hero.maxHP; }
+    if (hero.mana > hero.maxMana) { hero.mana = hero.maxMana; }
     hero.baseAttack += 5;
+    hero.maxHP += 5;
+    hero.maxMana += 5;
+    hero.baseDefense += 2;
     hero.xp = 0; // reset XP after level up
     std::cout << GREEN << "*** " << trim(CONF["levelUP"]) << "! *** " << RESETCOLOUR << MAGENTA << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["isNowLevel"]) << " " << hero.level << RESETCOLOUR << "!\n";
   }
