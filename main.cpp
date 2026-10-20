@@ -230,14 +230,14 @@ int main(int argc, char *argv[]) {
     };
   }
   else {
-      // Rogue, Paladin Armours
+      // Armours Rogue, Paladin
     armours = {
       {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour1"]) : trim(CONF["paladinArmour1"]), .defense = 5},
       {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour2"]) : trim(CONF["paladinArmour2"]), .defense = 10},
       {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour3"]) : trim(CONF["paladinArmour3"]), .defense = 15},
       {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour4"]) : trim(CONF["paladinArmour4"]), .defense = 20}
     };
-    // Rogue, Paladin Weapons
+    // Weapons Rogue, Paladin
     weapons = {
       {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon1"]) : trim(CONF["paladinWeapon1"]), .attack = 5, .cost = 20},
       {.name = (hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon2"]) : trim(CONF["paladinWeapon2"]), .attack = 10, .cost = 40},

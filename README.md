@@ -64,6 +64,7 @@ In [Visual Studio Code Editor](https://code.visualstudio.com/download), go to **
             "-std=c++20",
             "-ggdb",
             "-lpthread",
+            "-D_DEFAULT_SOURCE",
             "-Wall",
             "-Wextra",
             "-O2",
