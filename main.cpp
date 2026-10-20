@@ -71,6 +71,13 @@ struct Enemy {
   int xpReward;
 };
 
+// Potion structure
+struct Spell {
+  std::string name;
+  int attack;
+  int manaCost;
+};
+
 // Hero structure
 struct Hero {
   std::string name;
@@ -81,9 +88,11 @@ struct Hero {
   int maxMana;
   Armour equippedArmour;
   Weapon equippedWeapon;
+  Spell equippedSpell;
   std::vector<Armour> inventoryArmours;
   std::vector<Weapon> inventoryWeapons;
   std::vector<Potion> inventoryPotions;
+  std::vector<Spell> inventorySpells;
   int potions;
   int gold;
   int x, y;
@@ -103,7 +112,7 @@ struct Character {
   int maxMana;
 };
 
-int keys[7];
+int keys[8];
 std::string configHome = (std::getenv("HOME") ? std::string(std::getenv("HOME")) + std::string("/") : std::string("./")) + ".0verpg.json";
 std::string userLang = "en";
 std::ifstream cfg(configHome);
@@ -116,10 +125,12 @@ json config;
 void equipArmour(Hero &hero, int index);
 // Equip weapon
 void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index);
+// Equip spell from inventory
+void equipSpell(Hero &hero, int index);
 // Battle simulation
 bool battle(Hero &hero, Enemy enemy);
 // Loot room
-void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &weapons, std::vector<Potion> &potionsList);
+void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &weapons, std::vector<Potion> &potionsList,  std::vector<Spell> &spells);
 // Use potion
 void usePotion(Hero &hero);
 // Trap room
@@ -127,7 +138,7 @@ bool trapRoom(Hero &hero);
 // Treasure chest room
 void chestRoom(Hero &hero, std::vector<Armour> &armours);
 // Explore room
-bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &armours, std::vector<Weapon> &weapons,char &cell, std::vector<Potion> &potionsList);
+bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &armours, std::vector<Weapon> &weapons,char &cell, std::vector<Potion> &potionsList, std::vector<Spell> &spells);
 // Shop system
 void shop(Hero &hero, std::vector<Armour> &armours, std::vector<Potion> &potionsList);
 // Weapon shop system
@@ -183,6 +194,7 @@ int main(int argc, char *argv[]) {
   hero.baseAttack = characters[classChoice].baseAttack;
   hero.equippedArmour = {trim(CONF["none"]), 0};
   hero.equippedWeapon = {trim(CONF["fists"]), 0, 0};
+  hero.equippedSpell = {trim(CONF["basicSpell"]), 0, 0};
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
@@ -190,39 +202,55 @@ int main(int argc, char *argv[]) {
   hero.xp = 0;
   std::vector<Armour> armours;
   std::vector<Weapon> weapons;
-  // Warrior, Mage Armours and Weapons
+  std::vector<Spell> spells;
   if (hero.name == "Mage" || hero.name == "Магьосник" || hero.name == "Warrior" || hero.name == "Войн") {
-    // Armours
+    // Armours Warrior, Mage
     armours = {
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour1"]) : trim(CONF["armour1"]), 5},
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour2"]) : trim(CONF["armour2"]), 10},
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour3"]) : trim(CONF["armour3"]), 15},
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageArmour4"]) : trim(CONF["armour4"]), 20}
     };
-    // Weapons
+    // Weapons Warrior, Mage
     weapons = {
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon1"]) : trim(CONF["weapon1"]), 5, 20},
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon2"]) : trim(CONF["weapon2"]), 10, 40},
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon3"]) : trim(CONF["weapon3"]), 15, 60},
       {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageWeapon4"]) : trim(CONF["weapon4"]), 25, 100}
     };
+    // Spells Warrior, Mage
+    spells = {
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell1"]) : trim(CONF["warriorSpell1"]), 5, 0},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell2"]) : trim(CONF["warriorSpell2"]), 10, 10},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell3"]) : trim(CONF["warriorSpell3"]), 15, 15},
+      {(hero.name == "Mage" || hero.name == "Магьосник") ? trim(CONF["mageSpell4"]) : trim(CONF["warriorSpell4"]), 25, 20}
+    };
   }
   else {
-      // Rogue,Paladin Armours
+      // Rogue, Paladin Armours
     armours = {
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour1"]) : trim(CONF["paladinArmour1"]), 5},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour2"]) : trim(CONF["paladinArmour2"]), 10},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour3"]) : trim(CONF["paladinArmour3"]), 15},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueArmour4"]) : trim(CONF["paladinArmour4"]), 20}
     };
-    // Rogue,Paladin Weapons
+    // Rogue, Paladin Weapons
     weapons = {
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon1"]) : trim(CONF["paladinWeapon1"]), 5, 20},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon2"]) : trim(CONF["paladinWeapon2"]), 10, 40},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon3"]) : trim(CONF["paladinWeapon3"]), 15, 60},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon4"]) : trim(CONF["paladinWeapon4"]), 25, 100}
     };
+    // Spells
+    spells = {
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell1"]) : trim(CONF["paladinSpell1"]), 5, 0},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell2"]) : trim(CONF["paladinSpell2"]), 10, 10},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell3"]) : trim(CONF["paladinSpell3"]), 15, 15},
+      {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell4"]) : trim(CONF["paladinSpell4"]), 25, 20}
+    };
   }
+  // Establish default and starting spell
+  hero.inventorySpells.emplace_back(spells[0]);
   // Potions
   std::vector<Potion> potionsList = {
     {trim(CONF["potion1"]), 20, 15},
@@ -245,6 +273,7 @@ int main(int argc, char *argv[]) {
   unsigned char potionKey = static_cast<unsigned char>(keys[6]);
   unsigned char armourKey = static_cast<unsigned char>(keys[4]);
   unsigned char weaponKey = static_cast<unsigned char>(keys[5]);
+  unsigned char spellKey = static_cast<unsigned char>(keys[7]);
   std::cout << "\n" << trim(CONF["chooseStartingArmour"]) << "\n";
   for (size_t i = 0; i < armours.size(); ++i) {
     std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << MAGENTA << armours[i].name << CYAN << " (" << trim(CONF["defense"]) << " +" << RESETCOLOUR << YELLOW << armours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
@@ -274,8 +303,9 @@ int main(int argc, char *argv[]) {
       // Emojis from - www.emojishark.com
       std::cout << YELLOW << "\n💰 " << trim(CONF["gold"]) << ": " << hero.gold << RESETCOLOUR << " | " << MAGENTA << "💗 " << trim(CONF["hp"]) << ": " << hero.health << RESETCOLOUR
         << " | " << GREEN << "🧪 " << trim(CONF["potions"]) << ": " << hero.inventoryPotions.size() << RESETCOLOUR << " | "
-        << BLUE << "♻️ " << trim(CONF["mana"]) << ": " << hero.mana << RESETCOLOUR <<  " | 💀" << CYAN << " " << trim(CONF["attack"]) << ": " << hero.baseAttack + hero.equippedWeapon.attack << " " << trim(CONF["defense"]) << ": " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
-        << " | " << "👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["level"]) << ": " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
+        << BLUE << "♻️ " << trim(CONF["mana"]) << ": " << hero.mana << RESETCOLOUR <<  " | 💀" << CYAN << " " << trim(CONF["attack"]) << ": " << hero.baseAttack + hero.equippedWeapon.attack + hero.equippedSpell.attack << " " << trim(CONF["defense"]) << ": " << hero.baseDefense + hero.equippedArmour.defense << RESETCOLOUR
+        << " | " << "🪄 " << MAGENTA << trim(CONF["spell"]) << ": " << hero.equippedSpell.name << RESETCOLOUR
+        << " 👹 " << CYAN << hero.name << RESETCOLOUR << YELLOW << " " << trim(CONF["level"]) << ": " << RESETCOLOUR << MAGENTA << hero.level << RESETCOLOUR << ", " 
         << CYAN << hero.xp << "/" << hero.level * 50 << " " << trim(CONF["xp"]) << RESETCOLOUR << "\n";
       std::cout << YELLOW << trim(CONF["move"]) <<  " (" << wKey << "/" <<  dKey << "/" <<  aKey << "/" <<  sKey << "), " <<  potionKey << " " << trim(CONF["usePotion"]) << ", "
         <<  armourKey << " " << trim(CONF["toChangeArmour"]) << ", " <<  weaponKey << " " << trim(CONF["toChangeWeapon"]) << ", Q " << trim(CONF["toQuit"]) << ": " << RESETCOLOUR << std::endl;
@@ -309,6 +339,20 @@ int main(int argc, char *argv[]) {
         equipWeapon(hero, hero.inventoryWeapons, idx - 1);
         continue;
       }
+      if (move == spellKey) {
+        std::cout << MAGENTA << trim(CONF["curEquippedSpell"]) << ": " << RESETCOLOUR << GREEN << hero.equippedSpell.name << " (+" << trim(CONF["attack"]) << " " << hero.equippedSpell.attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
+        std::cout << trim(CONF["inventorySpells"]) << ":\n";
+        for (size_t i = 0; i < hero.inventorySpells.size(); ++i) {
+          std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventorySpells[i].name << RESETCOLOUR
+          << CYAN << " (" << trim(CONF["attack"]) << "+" << RESETCOLOUR << YELLOW << hero.inventorySpells[i].attack << RESETCOLOUR << " -"
+          << YELLOW << trim(CONF["manaCost"]) << " " << hero.inventorySpells[i].manaCost << RESETCOLOUR  << CYAN << ")" << RESETCOLOUR << "\n";
+        }
+        std::cout << trim(CONF["chooseSpellNumber"]) << ": ";
+        int idx;
+        std::cin >> idx;
+        equipSpell(hero, idx - 1);
+        continue;
+      }
       int newX = hero.x, newY = hero.y;
       if (move == wKey) newX--;
       else if (move == sKey) newX++;
@@ -320,7 +364,7 @@ int main(int argc, char *argv[]) {
       hero.y = newY;
       visited[hero.x][hero.y] = true;
       // Explore the room
-      if (!exploreRoom(hero, enemies, armours, weapons, dungeon[hero.x][hero.y], potionsList)) { std::cout << RED << "\n💀 " << trim(CONF["gameOver"]) << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
+      if (!exploreRoom(hero, enemies, armours, weapons, dungeon[hero.x][hero.y], potionsList, spells)) { std::cout << RED << "\n💀 " << trim(CONF["gameOver"]) << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       // Check if boss defeated
       bool bossAlive = false;
       for (int i = 0; i < mapSize; ++i) {
@@ -358,15 +402,22 @@ void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index) {
   std::cout << CYAN << hero.name << RESETCOLOUR << " " <<  trim(CONF["equipped"]) << " " << BLUE << hero.equippedWeapon.name << " (" <<  trim(CONF["attack"]) << " +" << hero.equippedWeapon.attack << ")" << RESETCOLOUR << "\n";
 }
 
+// Equip spell from inventory
+void equipSpell(Hero &hero, int index) {
+  if (index < 0 || index >= (int)hero.inventorySpells.size()) { std::cout << trim(CONF["invalidSpellIndex"]) << ".\n"; return; }
+  hero.equippedSpell = hero.inventorySpells[index];
+  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedSpell.name << " (" << trim(CONF["attack"]) << "+" << RESETCOLOUR << YELLOW << hero.inventorySpells[index].attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
+}
+
 // Battle simulation
 bool battle(Hero &hero, Enemy enemy) {
   std::cout << "\n⚔ " << trim(CONF["battle"]) << " " << CYAN << hero.name << RESETCOLOUR << " vs " << RED << enemy.name << RESETCOLOUR << "\n";
   while (hero.health > 0 && enemy.health > 0) {
     // Hero attacks
-    int heroAttack = hero.baseAttack + hero.equippedWeapon.attack;
+    int heroAttack = hero.baseAttack + hero.equippedWeapon.attack + hero.equippedSpell.attack;
     if(std::rand() % 100 < 20) { heroAttack *= 2; std::cout << YELLOW << trim(CONF["criticalHit"]) << "!" << RESETCOLOUR << "\n"; }
     enemy.health -= heroAttack;
-    if (hero.mana - 10 <= 0) { hero.mana = 0; } else { hero.mana -= 10; }
+    if (hero.mana - 10 <= 0) { hero.mana = 0; } else { hero.mana -= 10 - hero.equippedSpell.manaCost; }
     if (hero.mana == 0 && hero.weaponAttackDecreased == 0) { hero.equippedWeapon.attack -= 3; hero.weaponAttackDecreased = 1; }
     std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["attacksFor"]) << " " << YELLOW << heroAttack << RESETCOLOUR <<" " << trim(CONF["damage"]) << "! "
       << GREEN << (hero.mana > 0 ? trim(CONF["manaUsed"]) : trim(CONF["noManaUsed"])) << RESETCOLOUR << " | " << enemy.name << " " << trim(CONF["hp"]) << ": " << RED << std::max(0, enemy.health) << RESETCOLOUR << "\n";
@@ -398,8 +449,8 @@ bool battle(Hero &hero, Enemy enemy) {
 }
 
 // Loot room
-void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &weapons, std::vector<Potion> &potionsList) {
-  int lootType = std::rand() % 3;
+void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &weapons, std::vector<Potion> &potionsList,  std::vector<Spell> &spells) {
+  int lootType = std::rand() % 4;
   if (lootType == 0) {
     Potion lootPotion = potionsList[std::rand() % potionsList.size()];
     hero.inventoryPotions.emplace_back(lootPotion);
@@ -409,6 +460,11 @@ void lootRoom(Hero &hero, std::vector<Armour> &armours, std::vector<Weapon> &wea
     Weapon newWeapon = weapons[std::rand() % weapons.size()];
     hero.inventoryWeapons.emplace_back(newWeapon);
     std::cout << GREEN << "⚔ " << trim(CONF["foundNewWeapon"]) << ": " << newWeapon.name << " (" << trim(CONF["attack"]) << " +" << newWeapon.attack << ")" << RESETCOLOUR << "\n";
+  }
+  else if (lootType == 2) {
+    Spell newSpell = spells[std::rand() % spells.size()];
+    hero.inventorySpells.emplace_back(newSpell);
+    std::cout << GREEN << "⚔ " << trim(CONF["foundNewSpell"]) << ": " << newSpell.name << " (" << trim(CONF["attack"]) << " +" << newSpell.attack << "-" << trim(CONF["manaCost"]) << " " << newSpell.manaCost << ")" << RESETCOLOUR << "\n";
   }
   else {
     Armour newArmour = armours[std::rand() % armours.size()];
@@ -455,13 +511,13 @@ void chestRoom(Hero &hero, std::vector<Armour> &armours) {
 }
 
 // Explore room
-bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &armours, std::vector<Weapon> &weapon, char &cell, std::vector<Potion> &potionsList) {
+bool exploreRoom(Hero &hero, std::vector<Enemy> &enemies, std::vector<Armour> &armours, std::vector<Weapon> &weapon, char &cell, std::vector<Potion> &potionsList, std::vector<Spell> &spells) {
   if (cell == 'E') {
     Enemy enemy = enemies[std::rand() % enemies.size()];
     cell = '.';
     return battle(hero, enemy);
   } else if (cell == 'L') {
-    lootRoom(hero, armours, weapon, potionsList);
+    lootRoom(hero, armours, weapon, potionsList, spells);
     cell = '.';
     return true;
   } else if (cell == 'B') {
@@ -656,8 +712,8 @@ int readKey(void) {
 void setupKeys(void) {
   int x = 0;
   std::cout << trim(CONF["pressKeyFor"]) << " ";
-  for (auto text : { "RIGHT", ", UP", ", LEFT", ", DOWN",
-      ", Armour Inventory", ", Weapon Inventory", ", and Consume a Potion" }) {
+  for (auto text : { "RIGHT", ", UP", ", LEFT", ", DOWN", ", Armour Inventory",
+      ", Weapon Inventory", ", Consume a Potion", ", and Cast a Spell" }) {
     std::cout << text;
     keys[x++] = readKey();
   }
