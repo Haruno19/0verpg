@@ -192,9 +192,9 @@ int main(int argc, char *argv[]) {
   hero.weaponAttackDecreased = 0;
   hero.baseDefense = characters[classChoice].baseDefense;
   hero.baseAttack = characters[classChoice].baseAttack;
-  hero.equippedArmour = {trim(CONF["none"]), 0};
-  hero.equippedWeapon = {trim(CONF["fists"]), 0, 0};
-  hero.equippedSpell = {trim(CONF["basicSpell"]), 0, 0};
+  hero.equippedArmour = {.name = trim(CONF["none"]), .defense = 0};
+  hero.equippedWeapon = {.name = trim(CONF["fists"]), .attack = 0, .cost = 0};
+  hero.equippedSpell = {.name = trim(CONF["basicSpell"]), .attack = 0, .manaCost = 0};
   hero.gold = 50;
   hero.x = 0;
   hero.y = 0;
@@ -203,6 +203,9 @@ int main(int argc, char *argv[]) {
   std::vector<Armour> armours;
   std::vector<Weapon> weapons;
   std::vector<Spell> spells;
+  armours.reserve(4);
+  weapons.reserve(4);
+  spells.reserve(4);
   if (hero.name == "Mage" || hero.name == "Магьосник" || hero.name == "Warrior" || hero.name == "Войн") {
     // Armours Warrior, Mage
     armours = {
