@@ -17,6 +17,8 @@ sudo make install
 
 Now to run the game type `0verpg en` this will use the English version. Currently the are two languages `en` and `bg` - Bulgarian.
 
+### Don't forget to use the `Spells key` after start to change with the +5 attacking power spell. Otherwise it will default only to the hero attacking power and `Basic Spell`.
+
 ---
 
 ## Windows users
