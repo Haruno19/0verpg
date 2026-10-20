@@ -322,7 +322,8 @@ int main(int argc, char *argv[]) {
         std::cout << trim(CONF["inventoryArmours"]) << ":\n";
         for (size_t i = 0; i < hero.inventoryArmours.size(); ++i) {
           std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryArmours[i].name << RESETCOLOUR
-          << CYAN << " (" << trim(CONF["defense"]) << "+" << RESETCOLOUR << YELLOW << hero.inventoryArmours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
+          << CYAN << " (" << trim(CONF["defense"]) << " +" << RESETCOLOUR << YELLOW << hero.inventoryArmours[i].defense << RESETCOLOUR << CYAN << ")" << RESETCOLOUR
+          << BLUE << " (" << (hero.inventoryArmours[i].name == hero.equippedArmour.name ? trim(CONF["currentlyEquippedArmour"]) : trim(CONF["goodArmour"])) << ")" << RESETCOLOUR << "\n";
         }
         std::cout << trim(CONF["chooseArmourNumber"]) << ": ";
         int idx;
@@ -335,7 +336,8 @@ int main(int argc, char *argv[]) {
         std::cout << trim(CONF["inventoryWeapons"]) << ":\n";
         for (size_t i = 0; i < hero.inventoryWeapons.size(); ++i) {
           std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventoryWeapons[i].name << RESETCOLOUR
-          << CYAN << " (" << trim(CONF["attack"]) << " +" << RESETCOLOUR << YELLOW << hero.inventoryWeapons[i].attack << RESETCOLOUR << CYAN << ")" << RESETCOLOUR << "\n";
+          << CYAN << " (" << trim(CONF["attack"]) << " +" << RESETCOLOUR << YELLOW << hero.inventoryWeapons[i].attack << RESETCOLOUR << CYAN << ")" << RESETCOLOUR
+          << BLUE << " (" << (hero.inventoryWeapons[i].name == hero.equippedWeapon.name ? trim(CONF["currentlyEquippedWeapon"]) : trim(CONF["goodWeapon"])) << ")" << RESETCOLOUR << "\n";
         }
         std::cout << trim(CONF["chooseWeaponNumber"]) << ": ";
         int idx;
@@ -344,12 +346,13 @@ int main(int argc, char *argv[]) {
         continue;
       }
       if (move == spellKey) {
-        std::cout << MAGENTA << trim(CONF["curEquippedSpell"]) << ": " << RESETCOLOUR << GREEN << hero.equippedSpell.name << " ( +" << trim(CONF["attack"]) << " " << hero.equippedSpell.attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
+        std::cout << MAGENTA << trim(CONF["curEquippedSpell"]) << ": " << RESETCOLOUR << GREEN << hero.equippedSpell.name << " (+" << hero.equippedSpell.attack << " " << trim(CONF["attack"]) << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
         std::cout << trim(CONF["inventorySpells"]) << ":\n";
         for (size_t i = 0; i < hero.inventorySpells.size(); ++i) {
           std::cout << YELLOW << i+1 << ". " << RESETCOLOUR << coloursArr[std::rand() % coloursArrLen] << hero.inventorySpells[i].name << RESETCOLOUR
-          << CYAN << " (" << trim(CONF["attack"]) << "+" << RESETCOLOUR << YELLOW << hero.inventorySpells[i].attack << RESETCOLOUR << " -"
-          << YELLOW << trim(CONF["manaCost"]) << " " << hero.inventorySpells[i].manaCost << RESETCOLOUR  << CYAN << ")" << RESETCOLOUR << "\n";
+          << CYAN << " (" << trim(CONF["attack"]) << " +" << RESETCOLOUR << YELLOW << hero.inventorySpells[i].attack << RESETCOLOUR << " -"
+          << YELLOW << trim(CONF["manaCost"]) << " " << hero.inventorySpells[i].manaCost << RESETCOLOUR  << CYAN << ")"
+          << RESETCOLOUR << BLUE << " (" << (hero.inventorySpells[i].name == hero.equippedSpell.name ? trim(CONF["currentlyEquippedSpell"]) : trim(CONF["goodSpell"])) << ")" << RESETCOLOUR "\n";
         }
         std::cout << trim(CONF["chooseSpellNumber"]) << ": ";
         int idx;
@@ -410,7 +413,8 @@ void equipWeapon(Hero &hero, std::vector<Weapon> &weapons, int index) {
 void equipSpell(Hero &hero, int index) {
   if (index < 0 || index >= (int)hero.inventorySpells.size()) { std::cout << trim(CONF["invalidSpellIndex"]) << ".\n"; return; }
   hero.equippedSpell = hero.inventorySpells[index];
-  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedSpell.name << RESETCOLOUR << " (" << MAGENTA << trim(CONF["attack"]) << "+" << RESETCOLOUR << YELLOW << hero.inventorySpells[index].attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << RESETCOLOUR << ")" << "\n";
+  std::cout << CYAN << hero.name << RESETCOLOUR << " " << trim(CONF["equipped"]) << " " << BLUE << hero.equippedSpell.name
+    << " (+" << trim(CONF["attack"]) << " " << hero.inventorySpells[index].attack << " " << trim(CONF["manaCost"]) << " -" << hero.equippedSpell.manaCost << ")" << RESETCOLOUR << "\n";
 }
 
 // Battle simulation

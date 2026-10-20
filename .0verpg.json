@@ -165,7 +165,13 @@
         "invalidSpellIndex": "Invalid Spell index",
         "basicSpell": "Basic Spell",
         "spell": "Spell",
-        "toChangeSpell": "to change spell"
+        "toChangeSpell": "to change spell",
+        "currentlyEquippedSpell": "Currently equppied to the hero",
+        "goodSpell": "Good Spell",
+        "currentlyEquippedWeapon": "Currently equppied to the hero",
+        "goodWeapon": "Good Weapon",
+        "currentlyEquippedArmour": "Currently equppied to the hero",
+        "goodArmour": "Good Armour"
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -332,6 +338,12 @@
         "chooseSpellNumber": "Избери номер на магията",
         "invalidSpellIndex": "Невалиден избор на Магия",
         "spell": "Магия",
-        "toChangeSpell": "за да смениш магия"
+        "toChangeSpell": "за да смениш магия",
+        "currentlyEquippedSpell": "Героя вече използва тази магия",
+        "goodSpell": "Добра магия",
+        "currentlyEquippedWeapon": "Героя вече използва това оръжие",
+        "goodWeapon": "Добро оръжие",
+        "currentlyEquippedArmour": "Героя вече използва тази броня",
+        "goodArmour": "Добра броня"
     }
 }
