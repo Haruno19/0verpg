@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon3"]) : trim(CONF["paladinWeapon3"]), 15, 60},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueWeapon4"]) : trim(CONF["paladinWeapon4"]), 25, 100}
     };
-    // Spells
+    // Spells Rogue, Paladin
     spells = {
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell1"]) : trim(CONF["paladinSpell1"]), 5, 0},
       {(hero.name == "Rogue" || hero.name == "Дивак") ? trim(CONF["rogueSpell2"]) : trim(CONF["paladinSpell2"]), 10, 10},
@@ -714,7 +714,7 @@ void setupKeys(void) {
   int x = 0;
   std::cout << trim(CONF["pressKeyFor"]) << " ";
   for (auto text : { "RIGHT", ", UP", ", LEFT", ", DOWN", ", Armour Inventory",
-      ", Weapon Inventory", ", Consume a Potion", ", and Cast a Spell" }) {
+      ", Weapon Inventory", ", Consume a Potion", ", and Spell Inventory" }) {
     std::cout << text;
     keys[x++] = readKey();
   }
