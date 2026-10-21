@@ -326,7 +326,7 @@ int main(int argc, char *argv[]) {
         << ", " <<  spellKey << " " << trim(CONF["toChangeSpell"]) << ", Q " << trim(CONF["toQuit"]) << ": " << RESETCOLOUR << std::endl;
       //std::cin >> move;
       char move = std::tolower(static_cast<unsigned char>(readKey()));
-      if (move == 'q') { std::cout << MAGENTA << "🏁 Game ended." << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
+      if (move == 'q') { std::cout << MAGENTA << "🏁 " << trim(CONF["gameEnded"]) << RESETCOLOUR << "\n"; return EXIT_SUCCESS; }
       if (move == potionKey) { usePotion(hero); continue; }
       if (move == armourKey) {
         std::cout << MAGENTA << trim(CONF["curEquippedArmour"]) << ": " << RESETCOLOUR << GREEN << hero.equippedArmour.name << " (" << trim(CONF["defense"]) << " +" << hero.equippedArmour.defense << ")" << RESETCOLOUR << "\n";

@@ -166,18 +166,19 @@
         "basicSpell": "Basic Spell",
         "spell": "Spell",
         "toChangeSpell": "to change spell",
-        "currentlyEquippedSpell": "Currently equppied to the hero",
-        "goodSpell": "Good Spell",
-        "currentlyEquippedWeapon": "Currently equppied to the hero",
-        "goodWeapon": "Good Weapon",
-        "currentlyEquippedArmour": "Currently equppied to the hero",
-        "goodArmour": "Good Armour",
+        "currentlyEquippedSpell": "Currently equipped to the hero",
+        "goodSpell": "Available",
+        "currentlyEquippedWeapon": "Currently equppid to the hero",
+        "goodWeapon": "Available",
+        "currentlyEquippedArmour": "Currently equipped to the hero",
+        "goodArmour": "Available",
         "companion": "Wolf",
         "companionHeal": "Pet healing to",
         "companionAttacksFor": "Pet attacks with",
         "companionTookDamage": "The pet was attacked with",
         "companionHasHPleft": "The pet has HP left:",
-        "resurrectCompanion": "Resurrect the pet completes"
+        "resurrectCompanion": "Resurrect the pet completes",
+        "gameEnded": "Game ended."
     },
   "it": {
         "couldntopen": "Errore: Impossibile aprire ",
@@ -357,7 +358,7 @@
         "companionTookDamage": "Il lupo ha subito",
         "companionHasHPleft": "PS rimanenti del lupo:",
         "resurrectCompanion": "Il lupo torna in vita",
-        "resurrectCompanion": "Resurrect the pet completes"
+        "gameEnded": "Partita terminata."
     },
   "bg": {
         "couldntopen": "Грешка: He мога да отворя: ",
@@ -536,6 +537,7 @@
         "companionAttacksFor": "Кучето атакува с",
         "companionTookDamage": "Кучето беше атакувано с",
         "companionHasHPleft": "Кучето има оставаща кръв",
-        "resurrectCompanion": "Възкресявам кучето"
+        "resurrectCompanion": "Възкресявам кучето",
+        "gameEnded": "Играта приключи."
     }
 }
